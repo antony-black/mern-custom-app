@@ -1,25 +1,29 @@
 module.exports = {
   extends: [
-    'stylelint-config-standard-scss',
+    "stylelint-config-standard", // base standard rules
+    "stylelint-config-recommended-scss" // recommended SCSS rules
   ],
-  plugins: ['stylelint-scss'],
+  plugins: [
+    "stylelint-scss"
+  ],
   rules: {
-    'at-rule-no-unknown': null, // required for SCSS compatibility
-    'scss/at-rule-no-unknown': true,
+    // Disable rules that conflict with Prettier formatting
+    "max-empty-lines": null,
+    "string-quotes": null,
+    "color-hex-length": null,
 
-    'no-descending-specificity': null, // optional: disable specificity rule that can get noisy
-    'selector-class-pattern': null, // optional: relax class naming restrictions for CSS modules
+    // Your custom rules here, e.g.
+    "indentation": 2,
+    "number-leading-zero": "always",
+    "block-no-empty": true,
+    "unit-whitelist": ["em", "rem", "%", "s", "px", "vh", "vw"],
 
-    'prettier/prettier': true,
-    'block-no-empty': true,
-    'color-no-invalid-hex': true,
-    'declaration-block-trailing-semicolon': 'always',
-    'selector-pseudo-class-no-unknown': [
-      true,
-      {
-        ignorePseudoClasses: ['global'],
-      },
-    ],
+    // SCSS specific rules examples
+    "scss/dollar-variable-pattern": "^foo",
+    "scss/percent-placeholder-pattern": "^foo",
   },
-  ignoreFiles: ['**/node_modules/**', '**/dist/**', '**/*.js', '**/*.ts', '**/*.tsx'],
+  ignoreFiles: ["**/node_modules/**", "**/dist/**"],
+
+  // Optional: allow SCSS syntax parsing
+  customSyntax: "postcss-scss"
 };
