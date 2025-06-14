@@ -34,8 +34,10 @@
 //   },
 // );
 
-// eslint.config.js
+// =====================================================================
 import { defineConfig } from 'eslint/config';
+
+import importPlugin from 'eslint-plugin-import';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -55,7 +57,21 @@ export default defineConfig([
         ...globals.node, // Node.js globals like process, Buffer, etc.
       },
     },
+    plugins: {
+      import: importPlugin,
+    },
     rules: {
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: false,
+            orderImportKind: 'asc',
+          },
+        },
+      ],
       semi: ['error', 'always'],
       quotes: ['error', 'single', { allowTemplateLiterals: true }],
       'no-console': 'warn',
@@ -78,8 +94,20 @@ export default defineConfig([
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
+      import: importPlugin,
     },
     rules: {
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: false,
+            orderImportKind: 'asc',
+          },
+        },
+      ],
       // Use base "semi" rule for semicolons (typescript-eslint does not have a separate one)
       semi: ['error', 'always'],
 
@@ -95,7 +123,7 @@ export default defineConfig([
       // Stylistic preferences
       quotes: ['error', 'single', { allowTemplateLiterals: true }],
       'comma-dangle': ['error', 'always-multiline'],
-      'no-console': 'warn',
+      'no-console': 'error',
     },
   },
 ]);

@@ -138,16 +138,107 @@
 //   },
 // ]);
 // eslint.config.js
+// =============================================
+// import eslint from '@eslint/js';
+// import reactPlugin from 'eslint-plugin-react';
+// import reactHooksPlugin from 'eslint-plugin-react-hooks';
+// import { defineConfig } from 'eslint/config';
+// import globals from 'globals';
+// import tseslint from 'typescript-eslint';
 
-import eslint from '@eslint/js';
+// // ⬇️ Fix for __dirname in ESM context
+// // const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// export default defineConfig([
+//   {
+//     ignores: ['node_modules/**', 'dist/**', 'build/**', '**/*.d.ts'],
+//   },
+
+//   // JS/JSX config
+//   {
+//     files: ['**/*.js', '**/*.jsx'],
+//     languageOptions: {
+//       ecmaVersion: 'latest',
+//       sourceType: 'module',
+//       globals: {
+//         ...globals.browser,
+//         ...globals.es2024,
+//       },
+//     },
+//     plugins: {
+//       react: reactPlugin,
+//       'react-hooks': reactHooksPlugin,
+//     },
+//     rules: {
+//       ...eslint.configs.recommended.rules,
+//       ...reactPlugin.configs.recommended.rules,
+//       ...reactHooksPlugin.configs.recommended.rules,
+
+//       semi: ['error', 'always'],
+//       quotes: ['error', 'single', { allowTemplateLiterals: true }],
+//       'comma-dangle': ['error', 'always-multiline'],
+//       'no-console': 'warn',
+//       'react/react-in-jsx-scope': 'off',
+//       'react/prop-types': 'off',
+//     },
+
+//     settings: {
+//       react: { version: 'detect' },
+//     },
+//   },
+
+//   // TS/TSX config
+//   {
+//     files: ['**/*.ts', '**/*.tsx'],
+//     languageOptions: {
+//       parser: tseslint.parser,
+//       parserOptions: {
+//         // project: path.resolve(__dirname, './tsconfig.app.json'),
+//         project: ['./tsconfig.app.json', './tsconfig.node.json'],
+//         ecmaVersion: 'latest',
+//         sourceType: 'module',
+//         ecmaFeatures: { jsx: true },
+//       },
+//       globals: {
+//         ...globals.browser,
+//         ...globals.es2024,
+//       },
+//     },
+//     plugins: {
+//       '@typescript-eslint': tseslint.plugin,
+//       react: reactPlugin,
+//       'react-hooks': reactHooksPlugin,
+//     },
+//     rules: {
+//       ...reactPlugin.configs.recommended.rules,
+//       ...reactHooksPlugin.configs.recommended.rules,
+
+//       semi: ['error', 'always'],
+//       quotes: ['error', 'single', { allowTemplateLiterals: true }],
+//       'comma-dangle': ['error', 'always-multiline'],
+//       'no-console': 'error',
+//       'no-unused-vars': 'off',
+//       'no-undef': 'off',
+//       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+//       '@typescript-eslint/no-explicit-any': 'warn',
+//       '@typescript-eslint/explicit-function-return-type': 'off',
+//       'react/react-in-jsx-scope': 'off',
+//       'react/prop-types': 'off',
+//     },
+//     settings: {
+//       react: { version: 'detect' },
+//     },
+//   },
+// ]);
+// ==============================================
+
+import { defineConfig } from 'eslint/config';
+
+import importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-
-// ⬇️ Fix for __dirname in ESM context
-// const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig([
   {
@@ -168,18 +259,32 @@ export default defineConfig([
     plugins: {
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
+      import: importPlugin,
     },
     rules: {
-      ...eslint.configs.recommended.rules,
       ...reactPlugin.configs.recommended.rules,
       ...reactHooksPlugin.configs.recommended.rules,
 
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: false,
+            orderImportKind: 'asc',
+          },
+        },
+      ],
       semi: ['error', 'always'],
       quotes: ['error', 'single', { allowTemplateLiterals: true }],
       'comma-dangle': ['error', 'always-multiline'],
       'no-console': 'warn',
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
+
+      
+      'no-irregular-whitespace': ['error', { skipTemplates: true, skipStrings: true }],
     },
     settings: {
       react: { version: 'detect' },
@@ -192,7 +297,6 @@ export default defineConfig([
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        // project: path.resolve(__dirname, './tsconfig.app.json'),
         project: ['./tsconfig.app.json', './tsconfig.node.json'],
         ecmaVersion: 'latest',
         sourceType: 'module',
@@ -207,22 +311,40 @@ export default defineConfig([
       '@typescript-eslint': tseslint.plugin,
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
+      import: importPlugin,
     },
     rules: {
       ...reactPlugin.configs.recommended.rules,
       ...reactHooksPlugin.configs.recommended.rules,
 
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: false,
+            orderImportKind: 'asc',
+          },
+        },
+      ],
+
       semi: ['error', 'always'],
       quotes: ['error', 'single', { allowTemplateLiterals: true }],
       'comma-dangle': ['error', 'always-multiline'],
-      'no-console': 'warn',
+      'no-console': 'error',
       'no-unused-vars': 'off',
       'no-undef': 'off',
+
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
+
+      'no-irregular-whitespace': ['error', { skipTemplates: true, skipStrings: true }],
     },
     settings: {
       react: { version: 'detect' },
