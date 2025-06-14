@@ -6,6 +6,6 @@ export const Comp = () => {
   React.useEffect(() => {
     setState(1);
   }, []);
-  console.log('here2');
+
   return <div>{state}</div>;
 };
