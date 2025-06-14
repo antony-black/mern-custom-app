@@ -279,11 +279,10 @@ export default defineConfig([
       semi: ['error', 'always'],
       quotes: ['error', 'single', { allowTemplateLiterals: true }],
       'comma-dangle': ['error', 'always-multiline'],
-      'no-console': 'warn',
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
 
-      
       'no-irregular-whitespace': ['error', { skipTemplates: true, skipStrings: true }],
     },
     settings: {
@@ -332,7 +331,7 @@ export default defineConfig([
       semi: ['error', 'always'],
       quotes: ['error', 'single', { allowTemplateLiterals: true }],
       'comma-dangle': ['error', 'always-multiline'],
-      'no-console': 'error',
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
       'no-unused-vars': 'off',
       'no-undef': 'off',
 

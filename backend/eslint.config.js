@@ -74,7 +74,7 @@ export default defineConfig([
       ],
       semi: ['error', 'always'],
       quotes: ['error', 'single', { allowTemplateLiterals: true }],
-      'no-console': 'warn',
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     },
   },
 
@@ -123,7 +123,7 @@ export default defineConfig([
       // Stylistic preferences
       quotes: ['error', 'single', { allowTemplateLiterals: true }],
       'comma-dangle': ['error', 'always-multiline'],
-      'no-console': 'error',
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     },
   },
 ]);
