@@ -1,7 +1,6 @@
 module.exports = {
   extends: [
     'stylelint-config-standard-scss',
-    'stylelint-config-prettier', // disables rules that conflict with Prettier
   ],
   plugins: ['stylelint-scss'],
   rules: {
@@ -22,5 +21,5 @@ module.exports = {
       },
     ],
   },
-  ignoreFiles: ['**/*.js', '**/*.ts', '**/*.tsx'],
+  ignoreFiles: ['**/node_modules/**', '**/dist/**', '**/*.js', '**/*.ts', '**/*.tsx'],
 };
