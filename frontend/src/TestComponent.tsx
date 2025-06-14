@@ -7,5 +7,6 @@ export const Comp = () => {
     setState(1);
   }, []);
   console.log('here2');
+  console.log('here2');
   return <div>{state}</div>;
 };
