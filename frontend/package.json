@@ -10,8 +10,7 @@
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint-fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "prettify": "prettier --log-level warn --cache --write \"src/**/*.{js,ts,jsx,tsx,json,css,scss,md,yml,yaml}\" \"*.{js,ts,json,md,yml,yaml}\"",
-    "stylelint": "stylelint \"src/**/*.{css,scss}\"",
-    "stylelint-fix": "stylelint \"src/**/*.{scss,css}\" --fix"
+    "stylelint-fix": "stylelint 'frontend/src/**/*.{css,scss}' --fix"
   },
   "dependencies": {
     "eslint-plugin-react": "^7.37.5",
@@ -34,8 +33,11 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
+    "postcss-scss": "^4.0.9",
     "prettier": "^3.5.3",
     "stylelint": "^16.20.0",
+    "stylelint-config-recommended-scss": "^15.0.1",
+    "stylelint-config-standard": "^38.0.0",
     "stylelint-config-standard-scss": "^15.0.1",
     "stylelint-scss": "^6.12.1",
     "typescript": "~5.8.3",
