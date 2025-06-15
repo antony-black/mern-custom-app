@@ -2,6 +2,7 @@ import * as path from 'node:path';
 
 import legacy from '@vitejs/plugin-legacy';
 import react from '@vitejs/plugin-react';
+import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
@@ -12,6 +13,11 @@ export default defineConfig({
       targets: ['> 0.01%'],
     }),
   ],
+  css: {
+    postcss: {
+      plugins: [autoprefixer({})],
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
