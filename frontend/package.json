@@ -23,6 +23,7 @@
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@typescript-eslint/parser": "^8.34.0",
+    "@vitejs/plugin-legacy": "^6.1.1",
     "@vitejs/plugin-react": "^4.4.1",
     "eslint": "^9.25.0",
     "eslint-config-prettier": "^10.1.5",
@@ -52,7 +53,7 @@
     "*.{json,yml,md}": [
       "prettier --write"
     ],
-    "*.{css,scss,tsx}": [
+    "*.{css,scss}": [
       "stylelint --fix"
     ]
   }
