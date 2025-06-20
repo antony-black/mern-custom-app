@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ProductCard } from "@/components/product-card";
 import { useProductStore } from "@/store";
 
-const HomePage = () => {
+export const HomePage: React.FC = () => {
   const { fetchProducts, products } = useProductStore();
 
   useEffect(() => {
@@ -54,4 +54,3 @@ const HomePage = () => {
     </Container>
   );
 };
-export default HomePage;
