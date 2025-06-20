@@ -20,9 +20,7 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-
 import React, { useState } from "react";
-
 import type { IProduct } from "@/store";
 import { useProductStore } from "@/store";
 
