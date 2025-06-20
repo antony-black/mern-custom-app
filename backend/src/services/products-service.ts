@@ -14,7 +14,7 @@ import Product, { IProduct } from "../models/product-model";
 //     }
 //   }
 // };
-type TResponse = {
+export type TResponse = {
   success: boolean;
   data?: IProduct | IProduct[];
   message?: string;

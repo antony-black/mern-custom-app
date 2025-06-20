@@ -20,10 +20,17 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useProductStore } from "../store/product";
 
-export const ProductCard = ({ product }) => {
+import React, { useState } from "react";
+
+import type { IProduct } from "@/store";
+import { useProductStore } from "@/store";
+
+type TProductCardProps = {
+  product: IProduct;
+};
+
+export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
 
   const textColor = useColorModeValue("gray.600", "gray.200");
@@ -33,8 +40,8 @@ export const ProductCard = ({ product }) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleDeleteProduct = async (pid) => {
-    const { success, message } = await deleteProduct(pid);
+  const handleDeleteProduct = async (productId: string) => {
+    const { success, message } = await deleteProduct(productId);
     if (!success) {
       toast({
         title: "Error",
@@ -54,8 +61,8 @@ export const ProductCard = ({ product }) => {
     }
   };
 
-  const handleUpdateProduct = async (pid, updatedProduct) => {
-    const { success, message } = await updateProduct(pid, updatedProduct);
+  const handleUpdateProduct = async (productId: string, updatedProduct: IProduct) => {
+    const { success, message } = await updateProduct(productId, updatedProduct);
     onClose();
     if (!success) {
       toast({
@@ -97,8 +104,13 @@ export const ProductCard = ({ product }) => {
         </Text>
 
         <HStack spacing={2}>
-          <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" />
-          <IconButton icon={<DeleteIcon />} onClick={() => handleDeleteProduct(product._id)} colorScheme="red" />
+          <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" aria-label={""} />
+          <IconButton
+            icon={<DeleteIcon />}
+            onClick={() => handleDeleteProduct(product._id)}
+            colorScheme="red"
+            aria-label={""}
+          />
         </HStack>
       </Box>
 
@@ -121,7 +133,7 @@ export const ProductCard = ({ product }) => {
                 name="price"
                 type="number"
                 value={updatedProduct.price}
-                onChange={(e) => setUpdatedProduct({ ...updatedProduct, price: e.target.value })}
+                onChange={(e) => setUpdatedProduct({ ...updatedProduct, price: parseFloat(e.target.value) })}
               />
               <Input
                 placeholder="Image URL"
