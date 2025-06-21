@@ -90,7 +90,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
       _hover={{ transform: "translateY(-5px)", shadow: "xl" }}
       bg={bg}
     >
-      <Image src={product.image} alt={product.name} h={48} w="full" objectFit="cover" />
+      <Image src={product.image} alt={product.name} h={48} w="full" objectFit="contain" />
 
       <Box p={4}>
         <Heading as="h3" size="md" mb={2}>
