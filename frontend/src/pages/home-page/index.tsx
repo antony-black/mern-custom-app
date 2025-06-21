@@ -11,7 +11,6 @@ export const HomePage: React.FC = () => {
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
-  console.log("products", products);
 
   return (
     <Container maxW="container.xl" py={12}>
@@ -35,9 +34,7 @@ export const HomePage: React.FC = () => {
           spacing={10}
           w={"full"}
         >
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+          {!!products.length && products.map((product) => <ProductCard key={product._id} product={product} />)}
         </SimpleGrid>
 
         {products.length === 0 && (

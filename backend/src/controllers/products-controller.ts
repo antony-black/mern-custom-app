@@ -14,12 +14,11 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ success: false, message: "There are no products." });
   }
 
-  res.status(200).json({ success: true, data: products });
+  res.status(200).json({ products });
 };
 
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
   const product = req.body;
-
   if (!product.name || !product.price || !product.image) {
     res.status(400).json({
       success: false,
@@ -33,7 +32,8 @@ export const addProduct = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ success: false, message: "Server Error" });
   }
 
-  res.status(200).json({ success: true, data: newProduct });
+  // res.status(200).json({ success: true, data: newProduct });
+  res.status(200).json({ newProduct });
 };
 
 export const updateProduct = async (req: Request, res: Response): Promise<void> => {
@@ -46,7 +46,11 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
     res.status(500).json({ success: false, message: "Server Error" });
   }
 
-  res.status(200).json({ success: true, message: updatedProduct });
+  res.status(200).json({
+    success: true,
+    data: updatedProduct.data,
+    message: updatedProduct.message,
+  });
 };
 
 export const removeProduct = async (req: Request, res: Response): Promise<void> => {
@@ -58,5 +62,5 @@ export const removeProduct = async (req: Request, res: Response): Promise<void> 
     res.status(500).json({ success: false, message: "Server Error" });
   }
 
-  res.status(200).json({ success: true, message: info });
+  res.status(200).json({ success: info.success, message: info.message });
 };

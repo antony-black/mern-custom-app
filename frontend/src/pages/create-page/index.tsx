@@ -3,7 +3,6 @@ import { Box, Button, Container, Heading, Input, useColorModeValue, useToast, VS
 import { useState } from "react";
 
 import type { IProduct } from "../../../../backend/src/models/product-model";
-
 import { useProductStore } from "@/store";
 
 export const CreatePage: React.FC = () => {

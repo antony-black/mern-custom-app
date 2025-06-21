@@ -16,49 +16,34 @@ import Product, { IProduct } from "../models/product-model";
 // };
 export type TResponse = {
   success: boolean;
-  data?: IProduct | IProduct[];
+  data?: IProduct;
   message?: string;
 };
 
-export const getAllProductsService = async (): Promise<TResponse> => {
+export const getAllProductsService = async (): Promise<IProduct[] | undefined> => {
   try {
     const products = await Product.find();
-
-    return {
-      success: true,
-      data: products,
-    };
+    return products;
   } catch (error) {
     if (error instanceof Error) {
       console.error("all-products-error:", error.message);
     }
 
-    return {
-      success: false,
-      message: "Failed to fetch products.",
-    };
+    return [];
   }
 };
 
-export const addProductService = async (product: IProduct): Promise<TResponse> => {
+export const addProductService = async (product: IProduct): Promise<IProduct | undefined> => {
   const newProduct = new Product(product);
 
   try {
     const savedProduct = await newProduct.save();
 
-    return {
-      success: true,
-      data: savedProduct,
-    };
+    return savedProduct;
   } catch (error) {
     if (error instanceof Error) {
       console.error("new-product-error:", error.message);
     }
-
-    return {
-      success: false,
-      message: "Failed to add new product.",
-    };
   }
 };
 
@@ -77,6 +62,7 @@ export const updateProductService = async (id: string, product: IProduct): Promi
 
     return {
       success: true,
+      message: "Product updated.",
       data: updatedProduct.toObject(),
     };
   } catch (error) {
