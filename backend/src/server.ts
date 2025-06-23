@@ -12,6 +12,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+connectDB();
+
 const __dirname = path.resolve();
 
 app.use(express.json()); // allows us to accept JSON data in the req.body
@@ -27,7 +29,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.listen(PORT, () => {
-  connectDB();
-  console.log(`Running on ${PORT}`);
+  // connectDB();
+  console.log(`Running on ${process.env.PORT}`);
 });
 // uSLCRsVaQQ49Hh1t
