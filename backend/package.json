@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch src --exec \"node --experimental-specifier-resolution=node --import ./loader.mjs\" src/server.ts",
+    "dev": "NODE_ENV=development nodemon --watch src --exec \"node --experimental-specifier-resolution=node --import ./loader.mjs\" src/server.ts",
+    "start": "NODE_ENV=production node --experimental-specifier-resolution=node --import ./loader.mjs src/server.ts",
     "build": "tsc --project .",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",

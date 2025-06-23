@@ -1,4 +1,4 @@
-import Product, { IProduct } from "../models/product-model";
+import Product, { type IProduct } from "../models/product-model";
 
 //   try {
 //     const products = await Product.find();
