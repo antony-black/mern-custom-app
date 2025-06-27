@@ -58,10 +58,49 @@ export const CreatePage: React.FC = () => {
               onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
             />
             <Input
-              placeholder="Image URL"
+              placeholder="Image"
               name="image"
-              value={newProduct.image}
-              onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+              type="file"
+              accept="image/*"
+              onChange={async (e) => {
+                console.log("target:", e.target);
+                const file = e.target.files?.[0];
+                if (!file) return;
+                console.log("file:", file);
+                const formData = new FormData();
+                formData.append("image", file);
+                console.log("formData:", formData);
+                try {
+                  const res = await fetch("/api/upload", {
+                    method: "POST",
+                    body: formData,
+                  });
+
+                  const data = await res.json();
+                  console.log("data:", data);
+                  if (data?.url) {
+                    setNewProduct((prev) => ({ ...prev, image: data.url }));
+                    toast({
+                      title: "Image uploaded",
+                      description: "Cloudinary image uploaded successfully",
+                      status: "success",
+                      isClosable: true,
+                    });
+                  } else {
+                    throw new Error("Upload failed");
+                  }
+                } catch (error) {
+                  if (error instanceof Error) {
+                    console.error("Upload error.", error.message);
+                  }
+                  toast({
+                    title: "Upload failed",
+                    description: "Failed to upload image",
+                    status: "error",
+                    isClosable: true,
+                  });
+                }
+              }}
             />
 
             <Button colorScheme="blue" onClick={handleAddProduct} w="full">

@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 
 import dotenv from "dotenv";
@@ -5,7 +6,8 @@ import express from "express";
 
 import { connectDB } from "./config/db";
 
-import router from "./routes/products-routes";
+import router from "./routes/products-router";
+import uploadRouter from "./routes/upload-router";
 
 dotenv.config();
 
@@ -18,6 +20,12 @@ const __dirname = path.resolve();
 
 app.use(express.json()); // allows us to accept JSON data in the req.body
 app.use("/api/products/", router);
+app.use("/api/upload", uploadRouter);
+
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
 
 if (process.env.NODE_ENV === "production") {
   const distPath = path.resolve(__dirname, "../frontend/dist");
@@ -28,8 +36,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
-  // connectDB();
+app.listen(PORT, async () => {
   console.log(`Running on ${process.env.PORT}`);
 });
 // uSLCRsVaQQ49Hh1t
