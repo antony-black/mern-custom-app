@@ -19,6 +19,7 @@ export const CreatePage: React.FC = () => {
 
   const handleAddProduct = async () => {
     const { success, message } = await createProduct(newProduct);
+
     if (!success) {
       toast({
         title: "Error",
@@ -36,36 +37,68 @@ export const CreatePage: React.FC = () => {
     }
 
     setNewProduct({ name: "", price: 0, image: "" });
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  const handleUpload = async (file: File) => {
+  const processFileBeforeUpload = async (file: File) => {
     const formData = new FormData();
     formData.append("image", file);
 
-    const res = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-    const data = await res.json();
-    console.log("data:", data);
+      const data = await res.json();
 
-    if (data?.url) {
+      if (!res.ok || !data?.url) {
+        throw new Error("Upload succeeded but no image URL was returned.");
+      }
+
       setNewProduct((prev) => ({ ...prev, image: data.url }));
+
       toast({
         title: "Image uploaded",
         description: "Cloudinary image uploaded successfully",
         status: "success",
         isClosable: true,
       });
-    } else {
-      throw new Error("Upload failed");
-    }
 
-    return data;
+      return data;
+    } catch (error) {
+      console.error("Upload error:", error);
+
+      toast({
+        title: "Upload failed",
+        description: (error as Error).message ?? "Something went wrong during upload.",
+        status: "error",
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleUploadFile = async (file: File) => {
+    try {
+      setLoading(true);
+      const data = await processFileBeforeUpload(file);
+      setLoading(!data.success);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Upload error.", error.message);
+      }
+      toast({
+        title: "Upload failed",
+        description: "Failed to upload image",
+        status: "error",
+        isClosable: true,
+      });
+    } finally {
+      setLoading(!true);
+    }
   };
 
   return (
@@ -103,22 +136,7 @@ export const CreatePage: React.FC = () => {
                   return;
                 }
 
-                try {
-                  setLoading(true);
-                  const data = await handleUpload(file);
-                  console.log("data:", data);
-                  setLoading(!data.success);
-                } catch (error) {
-                  if (error instanceof Error) {
-                    console.error("Upload error.", error.message);
-                  }
-                  toast({
-                    title: "Upload failed",
-                    description: "Failed to upload image",
-                    status: "error",
-                    isClosable: true,
-                  });
-                }
+                await handleUploadFile(file);
               }}
             />
 
