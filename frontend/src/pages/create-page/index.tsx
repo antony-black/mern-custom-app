@@ -5,6 +5,11 @@ import { useRef, useState } from "react";
 import type { IProduct } from "../../../../backend/src/models/product-model";
 import { useProductStore } from "@/store";
 
+type TUpload = {
+  success: boolean;
+  url: string;
+};
+
 export const CreatePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [newProduct, setNewProduct] = useState<IProduct>({
@@ -17,7 +22,7 @@ export const CreatePage: React.FC = () => {
 
   const { createProduct } = useProductStore();
 
-  const handleAddProduct = async () => {
+  const handleAddProduct = async (): Promise<void> => {
     const { success, message } = await createProduct(newProduct);
 
     if (!success) {
@@ -43,7 +48,7 @@ export const CreatePage: React.FC = () => {
     }
   };
 
-  const processFileBeforeUpload = async (file: File) => {
+  const processFileBeforeUpload = async (file: File): Promise<TUpload | undefined> => {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -53,7 +58,7 @@ export const CreatePage: React.FC = () => {
         body: formData,
       });
 
-      const data = await res.json();
+      const data: TUpload = await res.json();
 
       if (!res.ok || !data?.url) {
         throw new Error("Upload succeeded but no image URL was returned.");
@@ -81,11 +86,15 @@ export const CreatePage: React.FC = () => {
     }
   };
 
-  const handleUploadFile = async (file: File) => {
+  const handleUploadFile = async (file: File): Promise<void> => {
     try {
       setLoading(true);
+
       const data = await processFileBeforeUpload(file);
-      setLoading(!data.success);
+
+      if (data) {
+        setLoading(!data.success);
+      }
     } catch (error) {
       if (error instanceof Error) {
         console.error("Upload error.", error.message);
