@@ -1,16 +1,18 @@
 import { Box, Button, Container, Heading, Input, useColorModeValue, useToast, VStack } from "@chakra-ui/react";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import type { IProduct } from "../../../../backend/src/models/product-model";
 import { useProductStore } from "@/store";
 
 export const CreatePage: React.FC = () => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [newProduct, setNewProduct] = useState<IProduct>({
     name: "",
     price: 0,
     image: "",
   });
+  const [isLoading, setLoading] = useState<boolean>(false);
   const toast = useToast();
 
   const { createProduct } = useProductStore();
@@ -32,7 +34,38 @@ export const CreatePage: React.FC = () => {
         isClosable: true,
       });
     }
+
     setNewProduct({ name: "", price: 0, image: "" });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    console.log("data:", data);
+
+    if (data?.url) {
+      setNewProduct((prev) => ({ ...prev, image: data.url }));
+      toast({
+        title: "Image uploaded",
+        description: "Cloudinary image uploaded successfully",
+        status: "success",
+        isClosable: true,
+      });
+    } else {
+      throw new Error("Upload failed");
+    }
+
+    return data;
   };
 
   return (
@@ -58,37 +91,23 @@ export const CreatePage: React.FC = () => {
               onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
             />
             <Input
+              ref={fileInputRef}
               placeholder="Image"
               name="image"
               type="file"
               accept="image/*"
               onChange={async (e) => {
-                console.log("target:", e.target);
                 const file = e.target.files?.[0];
-                if (!file) return;
-                console.log("file:", file);
-                const formData = new FormData();
-                formData.append("image", file);
-                console.log("formData:", formData);
-                try {
-                  const res = await fetch("/api/upload", {
-                    method: "POST",
-                    body: formData,
-                  });
 
-                  const data = await res.json();
+                if (!file) {
+                  return;
+                }
+
+                try {
+                  setLoading(true);
+                  const data = await handleUpload(file);
                   console.log("data:", data);
-                  if (data?.url) {
-                    setNewProduct((prev) => ({ ...prev, image: data.url }));
-                    toast({
-                      title: "Image uploaded",
-                      description: "Cloudinary image uploaded successfully",
-                      status: "success",
-                      isClosable: true,
-                    });
-                  } else {
-                    throw new Error("Upload failed");
-                  }
+                  setLoading(!data.success);
                 } catch (error) {
                   if (error instanceof Error) {
                     console.error("Upload error.", error.message);
@@ -103,7 +122,7 @@ export const CreatePage: React.FC = () => {
               }}
             />
 
-            <Button colorScheme="blue" onClick={handleAddProduct} w="full">
+            <Button colorScheme="blue" onClick={handleAddProduct} w="full" isLoading={isLoading}>
               Add Product
             </Button>
           </VStack>

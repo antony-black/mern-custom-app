@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-
+// TODO: separate on the cloudinary-util.ts and the route.ts
 const upload = multer({ storage });
 
 const uploadHandler: RequestHandler = async (req, res) => {
@@ -38,7 +38,7 @@ const uploadHandler: RequestHandler = async (req, res) => {
     const result = await cloudinary.uploader.upload(filePath, {
       folder: "mern-products",
       transformation: [
-        { width: 800, height: 800, crop: "limit" }, // ⬅ Resize, max 800x800
+        { width: 200, height: 200, crop: "limit" }, // ⬅ Resize, max 800x800
         { quality: "auto" }, // ⬅ Auto-compression
         { fetch_format: "auto" }, // ⬅ WebP/AVIF/etc if supported
       ],
@@ -46,7 +46,11 @@ const uploadHandler: RequestHandler = async (req, res) => {
 
     fs.unlinkSync(filePath);
     console.log("result:", result);
-    res.json({ success: true, url: result.secure_url });
+    res.json({
+      success: true,
+      url: result.secure_url,
+      public_id: result.public_id, // <== include this
+    });
   } catch (error) {
     console.error("upload-error:", error);
     res.status(500).json({ success: false, message: "Upload failed" });
@@ -56,3 +60,35 @@ const uploadHandler: RequestHandler = async (req, res) => {
 uploadRouter.post("/", upload.single("image"), uploadHandler);
 
 export default uploadRouter;
+// =======================================================================
+// import express from "express";
+// import multer from "multer";
+
+// import { uploadToCloudinary } from "../lib/cloudinary";
+
+// const uploadRouter = express.Router();
+
+// const storage = multer.diskStorage({
+//   destination: "uploads/",
+//   filename: (_, file, cb) => {
+//     cb(null, `${Date.now()}-${file.originalname}`);
+//   },
+// });
+// const upload = multer({ storage });
+
+// uploadRouter.post("/", upload.single("image"), async (req, res) => {
+//   if (!req.file?.path) {
+//     res.status(400).json({ success: false, message: "No file uploaded" });
+//     return;
+//   }
+
+//   const result = await uploadToCloudinary({ filePath: req.file.path });
+
+//   if (!result.success) {
+//     res.status(500).json({ success: false, message: result.message });
+//     return;
+//   }
+
+//   res.json({ success: true, url: result.url });
+// });
+// export default uploadRouter;
