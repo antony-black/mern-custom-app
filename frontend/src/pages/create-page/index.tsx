@@ -48,7 +48,7 @@ export const CreatePage: React.FC = () => {
     }
   };
 
-  const processFileBeforeUpload = async (file: File): Promise<TUpload | undefined> => {
+  const processFileBeforeUpload = async (file: File): Promise<TUpload> => {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -83,6 +83,8 @@ export const CreatePage: React.FC = () => {
         status: "error",
         isClosable: true,
       });
+
+      throw new Error("Upload error.");
     }
   };
 

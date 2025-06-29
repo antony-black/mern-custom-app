@@ -1,5 +1,3 @@
-import fs from "fs";
-
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import dotenv from "dotenv";
 
@@ -11,7 +9,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-export const uploadToCloudinary = async (filePath: string): Promise<UploadApiResponse> => {
+export const uploadToCloudinaryService = async (filePath: string): Promise<UploadApiResponse> => {
   try {
     const image = await cloudinary.uploader.upload(filePath, {
       folder: "mern-products",
@@ -28,5 +26,27 @@ export const uploadToCloudinary = async (filePath: string): Promise<UploadApiRes
       console.error(error.message);
     }
     throw new Error("Cloudinary upload failed");
+  }
+};
+
+export const deleteFromCloudinaryService = async (publicId: string): Promise<any> => {
+  try {
+    const result = await cloudinary.uploader.destroy(publicId);
+    console.log("result:", result);
+    return result;
+    // if (result.result !== "ok" && result.result !== "not_found") {
+    //   throw new Error(`Unexpected Cloudinary response: ${result.result}`);
+    // }
+
+    // return {
+    //   success: true,
+    //   message: `Image ${result.result === "ok" ? "deleted" : "not found"}`,
+    // };
+  } catch (error) {
+    console.error("Cloudinary delete error:", error);
+    // return {
+    //   success: false,
+    //   message: "Cloudinary image deletion failed.",
+    // };
   }
 };

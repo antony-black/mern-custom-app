@@ -1,4 +1,5 @@
 import Product, { type IProduct } from "../models/product-model";
+import { deleteFromCloudinaryService } from "./cloudinary-service";
 
 //   try {
 //     const products = await Product.find();
@@ -84,6 +85,8 @@ export const updateProductService = async (id: string, product: IProduct): Promi
 export const removeProductsService = async (id: string): Promise<TResponse> => {
   try {
     await Product.findByIdAndDelete({ _id: id });
+
+    await deleteFromCloudinaryService(id);
 
     return {
       success: true,
