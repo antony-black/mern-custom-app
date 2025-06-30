@@ -50,23 +50,28 @@ export const addProductService = async (product: IProduct): Promise<TProduct | u
   }
 };
 
-export const updateProductService = async (id: string, product: IProduct): Promise<TResponse> => {
+export const updateProductService = async (id: string, updatedProductData: IProduct): Promise<TResponse> => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(id, product, {
-      new: true,
-    });
-
-    if (!updatedProduct) {
+    const hasProduct = await Product.findById({ _id: id });
+    if (!hasProduct) {
       return {
         success: false,
         message: "Product not found.",
       };
     }
 
+    if (hasProduct.publicId !== updatedProductData.publicId) {
+      await removeFromCloudinaryService(hasProduct.publicId);
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, updatedProductData, {
+      new: true,
+    });
+
     return {
       success: true,
       message: "Product updated.",
-      data: updatedProduct.toObject(),
+      data: updatedProduct?.toObject(),
     };
   } catch (error) {
     if (error instanceof Error) {

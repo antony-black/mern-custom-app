@@ -28,8 +28,15 @@ type TProductCardProps = {
   product: IProduct;
 };
 
+type TUpload = {
+  success: boolean;
+  url: string;
+  publicId: string;
+};
+
 export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const textColor = useColorModeValue("gray.600", "gray.200");
   const bg = useColorModeValue("white", "gray.800");
@@ -78,6 +85,70 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
         duration: 3000,
         isClosable: true,
       });
+    }
+  };
+
+  const processFileBeforeUpload = async (file: File): Promise<TUpload> => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data: TUpload = await res.json();
+
+      if (!res.ok || !data?.url) {
+        throw new Error("Upload succeeded but no image URL was returned.");
+      }
+
+      setUpdatedProduct((prev) => ({ ...prev, image: data.url, publicId: data.publicId }));
+
+      toast({
+        title: "Image uploaded",
+        description: "Cloudinary image uploaded successfully",
+        status: "success",
+        isClosable: true,
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Upload error:", error);
+
+      toast({
+        title: "Upload failed",
+        description: (error as Error).message ?? "Something went wrong during upload.",
+        status: "error",
+        isClosable: true,
+      });
+
+      throw new Error("Upload error.");
+    }
+  };
+
+  const handleUploadFile = async (file: File): Promise<void> => {
+    try {
+      setLoading(true);
+
+      const data = await processFileBeforeUpload(file);
+
+      if (data) {
+        setLoading(!data.success);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Upload error.", error.message);
+      }
+      toast({
+        title: "Upload failed",
+        description: "Failed to upload image",
+        status: "error",
+        isClosable: true,
+      });
+    } finally {
+      setLoading(!true);
     }
   };
 
@@ -134,16 +205,30 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
                 onChange={(e) => setUpdatedProduct({ ...updatedProduct, price: parseFloat(e.target.value) })}
               />
               <Input
-                placeholder="Image URL"
+                placeholder="Image"
                 name="image"
-                value={updatedProduct.image}
-                onChange={(e) => setUpdatedProduct({ ...updatedProduct, image: e.target.value })}
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+
+                  if (!file) {
+                    return;
+                  }
+
+                  await handleUploadFile(file);
+                }}
               />
             </VStack>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={() => handleUpdateProduct(product._id, updatedProduct)}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => handleUpdateProduct(product._id, updatedProduct)}
+              isLoading={isLoading}
+            >
               Update
             </Button>
             <Button variant="ghost" onClick={onClose}>

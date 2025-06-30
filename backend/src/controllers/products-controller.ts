@@ -40,9 +40,9 @@ export const addProduct = async (req: Request, res: Response): Promise<void> => 
 
 export const updateProduct = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const product = req.body;
+  const updatedProductData = req.body;
 
-  const updatedProduct = await updateProductService(id, product);
+  const updatedProduct = await updateProductService(id, updatedProductData);
 
   if (!updatedProduct) {
     res.status(500).json({ success: false, message: "Server Error" });
