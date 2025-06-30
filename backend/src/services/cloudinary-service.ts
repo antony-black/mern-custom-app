@@ -1,5 +1,6 @@
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import dotenv from "dotenv";
+import { TResponse } from "./products-service";
 
 dotenv.config();
 
@@ -29,24 +30,22 @@ export const uploadToCloudinaryService = async (filePath: string): Promise<Uploa
   }
 };
 
-export const deleteFromCloudinaryService = async (publicId: string): Promise<any> => {
+export const removeFromCloudinaryService = async (publicId: string): Promise<TResponse> => {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
-    console.log("result:", result);
-    return result;
-    // if (result.result !== "ok" && result.result !== "not_found") {
-    //   throw new Error(`Unexpected Cloudinary response: ${result.result}`);
-    // }
+    if (result.result !== "ok" && result.result !== "not_found") {
+      throw new Error(`Unexpected Cloudinary response: ${result.result}`);
+    }
 
-    // return {
-    //   success: true,
-    //   message: `Image ${result.result === "ok" ? "deleted" : "not found"}`,
-    // };
+    return {
+      success: true,
+      message: `Image ${result.result === "ok" ? "deleted" : "not found"}`,
+    };
   } catch (error) {
     console.error("Cloudinary delete error:", error);
-    // return {
-    //   success: false,
-    //   message: "Cloudinary image deletion failed.",
-    // };
+    return {
+      success: false,
+      message: "Cloudinary image deletion failed.",
+    };
   }
 };

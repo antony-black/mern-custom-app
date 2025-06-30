@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { uploadToCloudinary } from "../controllers/cloudinary-controller";
+import { removeFromCloudinary, uploadToCloudinary } from "../controllers/cloudinary-controller";
 
 const uploadRouter = express.Router();
 
@@ -14,5 +14,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 uploadRouter.post("/", upload.single("image"), uploadToCloudinary);
+uploadRouter.delete("/:publicId", removeFromCloudinary);
 
 export default uploadRouter;

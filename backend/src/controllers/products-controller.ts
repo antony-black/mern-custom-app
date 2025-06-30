@@ -19,17 +19,19 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
 
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
   const product = req.body;
-  if (!product.name || !product.price || !product.image) {
+
+  if (!product.name || !product.price || !product.image || !product.publicId) {
     res.status(400).json({
       success: false,
-      message: "Please provide all fields.",
+      message: "Please provide all fields (data).",
     });
+    return;
   }
 
   const newProduct = await addProductService(product);
-
   if (!newProduct) {
     res.status(500).json({ success: false, message: "Server Error" });
+    return;
   }
 
   // res.status(200).json({ success: true, data: newProduct });

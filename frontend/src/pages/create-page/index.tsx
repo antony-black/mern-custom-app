@@ -2,17 +2,17 @@ import { Box, Button, Container, Heading, Input, useColorModeValue, useToast, VS
 
 import { useRef, useState } from "react";
 
-import type { IProduct } from "../../../../backend/src/models/product-model";
-import { useProductStore } from "@/store";
+import { useProductStore, type TProduct } from "@/store";
 
 type TUpload = {
   success: boolean;
   url: string;
+  publicId: string;
 };
 
 export const CreatePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [newProduct, setNewProduct] = useState<IProduct>({
+  const [newProduct, setNewProduct] = useState<TProduct>({
     name: "",
     price: 0,
     image: "",
@@ -24,7 +24,6 @@ export const CreatePage: React.FC = () => {
 
   const handleAddProduct = async (): Promise<void> => {
     const { success, message } = await createProduct(newProduct);
-
     if (!success) {
       toast({
         title: "Error",
@@ -64,7 +63,7 @@ export const CreatePage: React.FC = () => {
         throw new Error("Upload succeeded but no image URL was returned.");
       }
 
-      setNewProduct((prev) => ({ ...prev, image: data.url }));
+      setNewProduct((prev) => ({ ...prev, image: data.url, publicId: data.publicId }));
 
       toast({
         title: "Image uploaded",

@@ -9,10 +9,17 @@ export interface IProduct extends IProductBase {
   updatedAt?: string;
 }
 
+export type TProduct = {
+  name: string;
+  price: number;
+  image: string;
+  publicId?: string;
+};
+
 type ProductStore = {
   products: IProduct[];
   setProducts: (products: IProduct[]) => void;
-  createProduct: (product: IProductBase) => Promise<TResponse>;
+  createProduct: (product: TProduct) => Promise<TResponse>;
   fetchProducts: () => Promise<void>;
   deleteProduct: (productId: string) => Promise<TResponse>;
   updateProduct: (productId: string, updatedProduct: IProduct) => Promise<TResponse>;
@@ -49,6 +56,7 @@ export const useProductStore = create<ProductStore>((set) => ({
     });
     const data: TResponse = await res.json();
     set((state) => ({ products: { ...state.products, ...data.data } }));
+
     return { success: true, message: "Product created successfully" };
   },
 
