@@ -15,38 +15,75 @@ import { removeFromCloudinaryService } from "./cloudinary-service";
 //     }
 //   }
 // };
-export type TResponse = {
+export type TResponse<T = IProduct> = {
   success: boolean;
-  data?: IProduct;
-  message?: string;
+  message: string;
+  data?: T;
 };
 
-export type TProduct = Omit<IProduct, "publicId">;
-
-export const getAllProductsService = async (): Promise<IProduct[] | undefined> => {
+export const getAllProductsService = async (): Promise<TResponse<IProduct[]>> => {
   try {
     const products = await Product.find();
-    return products;
+    if (products.length <= 0) {
+      return {
+        success: false,
+        message: "Products not found.",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Products are available.",
+      data: products,
+    };
   } catch (error) {
     if (error instanceof Error) {
       console.error("all-products-error:", error.message);
     }
 
-    return [];
+    return {
+      success: false,
+      message: "Server error while fetching products.",
+    };
   }
 };
 
-export const addProductService = async (product: IProduct): Promise<TProduct | undefined> => {
+export const addProductService = async (product: IProduct): Promise<TResponse> => {
   const newProduct = new Product(product);
+  if (!newProduct) {
+    return {
+      success: false,
+      message: "A new product is not found.",
+    };
+  }
 
   try {
     const savedProduct = await newProduct.save();
-    console.log("savedProduct:", savedProduct);
-    return savedProduct;
+    if (!savedProduct) {
+      return {
+        success: false,
+        message: "Incorrect stored product.",
+      };
+    }
+
+    return {
+      success: true,
+      message: "A new product added.",
+      data: savedProduct,
+    };
   } catch (error) {
     if (error instanceof Error) {
-      console.error("new-product-error:", error.message);
+      console.error("updated-product-error:", error.message);
+      return {
+        success: false,
+        message: "Server error while adding a new product.",
+      };
     }
+
+    return {
+      success: false,
+      message: "Unknown error occurred.",
+    };
   }
 };
 

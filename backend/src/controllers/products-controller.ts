@@ -9,12 +9,16 @@ import {
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   const products = await getAllProductsService();
-
   if (!products) {
     res.status(500).json({ success: false, message: "There are no products." });
+    return;
   }
 
-  res.status(200).json({ products });
+  res.status(200).json({
+    success: products.success,
+    data: products.data,
+    message: products.message,
+  });
 };
 
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
@@ -25,6 +29,7 @@ export const addProduct = async (req: Request, res: Response): Promise<void> => 
       success: false,
       message: "Please provide all fields (data).",
     });
+
     return;
   }
 
@@ -34,8 +39,11 @@ export const addProduct = async (req: Request, res: Response): Promise<void> => 
     return;
   }
 
-  // res.status(200).json({ success: true, data: newProduct });
-  res.status(200).json({ newProduct });
+  res.status(200).json({
+    success: newProduct.success,
+    message: newProduct.message,
+    data: newProduct,
+  });
 };
 
 export const updateProduct = async (req: Request, res: Response): Promise<void> => {
@@ -46,10 +54,11 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
 
   if (!updatedProduct) {
     res.status(500).json({ success: false, message: "Server Error" });
+    return;
   }
 
   res.status(200).json({
-    success: true,
+    success: updatedProduct.success,
     data: updatedProduct.data,
     message: updatedProduct.message,
   });
@@ -58,11 +67,15 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
 export const removeProduct = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
-  const info = await removeProductsService(id);
+  const deleteInfo = await removeProductsService(id);
 
-  if (!info) {
+  if (!deleteInfo) {
     res.status(500).json({ success: false, message: "Server Error" });
+    return;
   }
 
-  res.status(200).json({ success: info.success, message: info.message });
+  res.status(200).json({
+    success: deleteInfo.success,
+    message: deleteInfo.message,
+  });
 };
