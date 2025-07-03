@@ -10,7 +10,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-export const uploadToCloudinaryService = async (filePath: string): Promise<UploadApiResponse> => {
+export const uploadToCloudinaryService = async (filePath: string): Promise<TResponse<UploadApiResponse>> => {
   try {
     const image = await cloudinary.uploader.upload(filePath, {
       folder: "mern-products",
@@ -21,7 +21,11 @@ export const uploadToCloudinaryService = async (filePath: string): Promise<Uploa
       ],
     });
 
-    return image;
+    return {
+      success: true,
+      message: "Upload to cloudinary.",
+      data: image,
+    };
   } catch (error) {
     if (error instanceof Error) {
       console.error(error.message);

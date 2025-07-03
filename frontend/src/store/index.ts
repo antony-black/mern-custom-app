@@ -25,17 +25,6 @@ type ProductStore = {
   updateProduct: (productId: string, updatedProduct: IProduct) => Promise<TResponse>;
 };
 
-// function isValidProduct(obj: any): obj is IProduct {
-//   return (
-//     obj &&
-//     typeof obj === "object" &&
-//     typeof obj._id === "string" &&
-//     typeof obj.name === "string" &&
-//     typeof obj.price === "number" &&
-//     typeof obj.image === "string"
-//   );
-// }
-
 export const useProductStore = create<ProductStore>((set) => ({
   products: [],
   setProducts: (products) => {

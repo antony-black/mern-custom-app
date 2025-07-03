@@ -2,12 +2,12 @@ import { Box, Button, Container, Heading, Input, useColorModeValue, useToast, VS
 
 import { useRef, useState } from "react";
 
+import type { TResponse } from "../../../../backend/src/services/products-service";
 import { useProductStore, type TProduct } from "@/store";
-
-type TUpload = {
-  success: boolean;
-  url: string;
-  publicId: string;
+// TODO: move out the same code from the "ProductCard" and "CreatePage"
+export type TCloudinaryImageRaw = {
+  secure_url: string;
+  public_id: string;
 };
 
 export const CreatePage: React.FC = () => {
@@ -47,7 +47,7 @@ export const CreatePage: React.FC = () => {
     }
   };
 
-  const processFileBeforeUpload = async (file: File): Promise<TUpload> => {
+  const processFileBeforeUpload = async (file: File): Promise<TResponse<TCloudinaryImageRaw>> => {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -57,24 +57,27 @@ export const CreatePage: React.FC = () => {
         body: formData,
       });
 
-      const data: TUpload = await res.json();
+      const uploadedImage: TResponse<TCloudinaryImageRaw> = await res.json();
+      const { success, message, data } = uploadedImage;
 
-      if (!res.ok || !data?.url) {
+      if (!res.ok || !data?.secure_url) {
         throw new Error("Upload succeeded but no image URL was returned.");
       }
 
-      setNewProduct((prev) => ({ ...prev, image: data.url, publicId: data.publicId }));
+      setNewProduct((prev) => ({ ...prev, image: data.secure_url, publicId: data.public_id }));
 
       toast({
         title: "Image uploaded",
-        description: "Cloudinary image uploaded successfully",
+        description: message,
         status: "success",
         isClosable: true,
       });
 
-      return data;
+      return { success, message, data };
     } catch (error) {
-      console.error("Upload error:", error);
+      if (error instanceof Error) {
+        console.error("Upload error.", error.message);
+      }
 
       toast({
         title: "Upload failed",
@@ -100,9 +103,10 @@ export const CreatePage: React.FC = () => {
       if (error instanceof Error) {
         console.error("Upload error.", error.message);
       }
+
       toast({
         title: "Upload failed",
-        description: "Failed to upload image",
+        description: (error as Error).message ?? "Failed to upload image",
         status: "error",
         isClosable: true,
       });

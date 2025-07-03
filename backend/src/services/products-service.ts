@@ -1,20 +1,6 @@
 import Product, { type IProduct } from "../models/product-model";
 import { removeFromCloudinaryService } from "./cloudinary-service";
 
-//   try {
-//     const products = await Product.find();
-
-//     if (!products) {
-//       throw Error("Products are undefined.");
-//     }
-
-//     return products;
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.error("all-products-error:", error.message);
-//     }
-//   }
-// };
 export type TResponse<T = IProduct> = {
   success: boolean;
   message: string;

@@ -21,17 +21,17 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import type { TResponse } from "../../../../backend/src/services/products-service";
 import type { IProduct } from "@/store";
 import { useProductStore } from "@/store";
 
 type TProductCardProps = {
   product: IProduct;
 };
-
-type TUpload = {
-  success: boolean;
-  url: string;
-  publicId: string;
+// TODO: move out the same code from the "ProductCard" and "CreatePage"
+export type TCloudinaryImageRaw = {
+  secure_url: string;
+  public_id: string;
 };
 
 export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
@@ -68,7 +68,9 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
 
   const handleUpdateProduct = async (productId: string, updatedProduct: IProduct) => {
     const { success, message } = await updateProduct(productId, updatedProduct);
+
     onClose();
+
     if (!success) {
       toast({
         title: "Error",
@@ -88,7 +90,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
     }
   };
 
-  const processFileBeforeUpload = async (file: File): Promise<TUpload> => {
+  const processFileBeforeUpload = async (file: File): Promise<TResponse<TCloudinaryImageRaw>> => {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -98,22 +100,23 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
         body: formData,
       });
 
-      const data: TUpload = await res.json();
+      const uploadedImage: TResponse<TCloudinaryImageRaw> = await res.json();
+      const { success, message, data } = uploadedImage;
 
-      if (!res.ok || !data?.url) {
+      if (!res.ok || !data?.secure_url) {
         throw new Error("Upload succeeded but no image URL was returned.");
       }
 
-      setUpdatedProduct((prev) => ({ ...prev, image: data.url, publicId: data.publicId }));
+      setUpdatedProduct((prev) => ({ ...prev, image: data.secure_url, publicId: data.public_id }));
 
       toast({
         title: "Image uploaded",
-        description: "Cloudinary image uploaded successfully",
+        description: message,
         status: "success",
         isClosable: true,
       });
 
-      return data;
+      return { success, message, data };
     } catch (error) {
       console.error("Upload error:", error);
 

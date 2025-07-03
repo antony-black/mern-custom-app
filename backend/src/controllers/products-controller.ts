@@ -8,23 +8,19 @@ import {
 } from "../services/products-service";
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
-  const products = await getAllProductsService();
-  if (!products) {
-    res.status(500).json({ success: false, message: "There are no products." });
+  const { success, message, data } = await getAllProductsService();
+  if (!success) {
+    res.status(500).json({ success, message });
     return;
   }
 
-  res.status(200).json({
-    success: products.success,
-    data: products.data,
-    message: products.message,
-  });
+  res.status(200).json({ success, message, data });
 };
 
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
-  const product = req.body;
+  const { name, price, image, publicId } = req.body;
 
-  if (!product.name || !product.price || !product.image || !product.publicId) {
+  if (!name || !price || !image || !publicId) {
     res.status(400).json({
       success: false,
       message: "Please provide all fields (data).",
@@ -33,49 +29,38 @@ export const addProduct = async (req: Request, res: Response): Promise<void> => 
     return;
   }
 
-  const newProduct = await addProductService(product);
-  if (!newProduct) {
-    res.status(500).json({ success: false, message: "Server Error" });
+  const { success, message, data } = await addProductService({ name, price, image, publicId });
+  if (!success) {
+    res.status(500).json({ success, message });
     return;
   }
 
-  res.status(200).json({
-    success: newProduct.success,
-    message: newProduct.message,
-    data: newProduct,
-  });
+  res.status(200).json({ success, message, data });
 };
 
 export const updateProduct = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const updatedProductData = req.body;
 
-  const updatedProduct = await updateProductService(id, updatedProductData);
+  const { success, message, data } = await updateProductService(id, updatedProductData);
 
-  if (!updatedProduct) {
+  if (!success) {
     res.status(500).json({ success: false, message: "Server Error" });
     return;
   }
 
-  res.status(200).json({
-    success: updatedProduct.success,
-    data: updatedProduct.data,
-    message: updatedProduct.message,
-  });
+  res.status(200).json({ success, data, message });
 };
 
 export const removeProduct = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
-  const deleteInfo = await removeProductsService(id);
+  const { success, message } = await removeProductsService(id);
 
-  if (!deleteInfo) {
-    res.status(500).json({ success: false, message: "Server Error" });
+  if (!success) {
+    res.status(500).json({ success, message });
     return;
   }
 
-  res.status(200).json({
-    success: deleteInfo.success,
-    message: deleteInfo.message,
-  });
+  res.status(200).json({ success, message });
 };

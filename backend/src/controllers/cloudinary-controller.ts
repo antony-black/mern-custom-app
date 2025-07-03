@@ -11,15 +11,11 @@ export const uploadToCloudinary: RequestHandler = async (req, res) => {
     return;
   }
 
-  const image = await uploadToCloudinaryService(filePath);
+  const { success, message, data } = await uploadToCloudinaryService(filePath);
 
   fs.unlinkSync(filePath);
 
-  res.json({
-    success: true,
-    url: image.secure_url,
-    publicId: image.public_id,
-  });
+  res.json({ success, message, data });
 };
 
 export const removeFromCloudinary: RequestHandler = async (req, res) => {
