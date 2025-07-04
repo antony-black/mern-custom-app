@@ -3,6 +3,7 @@ import { Button, Container, Flex, HStack, Text, useColorMode } from "@chakra-ui/
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
 import { Link } from "react-router-dom";
+import Logo from "@/assets/images/logo.svg?react";
 
 export const Navbar: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -26,7 +27,9 @@ export const Navbar: React.FC = () => {
           bgGradient={"linear(to-r, cyan.400, blue.500)"}
           bgClip={"text"}
         >
-          <Link to={"/"}>Product Store 🛒</Link>
+          <Link to={"/"}>
+            <Logo width={350} height={40} />
+          </Link>
         </Text>
 
         <HStack spacing={2} alignItems={"center"}>

@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 
 type TErrorPageComponent = {
   title?: string;
@@ -7,5 +7,5 @@ type TErrorPageComponent = {
 };
 
 export const ErrorPageComponent: React.FC<TErrorPageComponent> = ({ title = "Oops, error", children }) => {
-  return <Box title={title}>{children}</Box>;
+  return <Center title={title}>{children}</Center>;
 };

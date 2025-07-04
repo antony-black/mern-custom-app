@@ -1,9 +1,9 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import { Route, Routes } from "react-router-dom";
-import { Navbar } from "./components/navbar";
-import { CreatePage } from "./pages/create-page";
-import { HomePage } from "./pages/home-page";
-import { NotFoundPage } from "./pages/not-found-page";
+import { Navbar } from "@/components/navbar";
+import { CreatePage } from "@/pages/create-page";
+import { HomePage } from "@/pages/home-page";
+import { NotFoundPage } from "@/pages/not-found-page";
 
 function App() {
   return (
