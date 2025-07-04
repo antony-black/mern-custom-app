@@ -3,12 +3,9 @@ import { Box, Button, Container, Heading, Input, useColorModeValue, useToast, VS
 import { useRef, useState } from "react";
 
 import type { TResponse } from "../../../../backend/src/services/products-service";
+import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import { useProductStore, type TProduct } from "@/store";
 // TODO: move out the same code from the "ProductCard" and "CreatePage"
-export type TCloudinaryImageRaw = {
-  secure_url: string;
-  public_id: string;
-};
 
 export const CreatePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);

@@ -23,16 +23,13 @@ import {
 import React, { useState } from "react";
 import type { TResponse } from "../../../../backend/src/services/products-service";
 import type { IProduct } from "@/store";
+import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import { useProductStore } from "@/store";
 
 type TProductCardProps = {
   product: IProduct;
 };
 // TODO: move out the same code from the "ProductCard" and "CreatePage"
-export type TCloudinaryImageRaw = {
-  secure_url: string;
-  public_id: string;
-};
 
 export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
@@ -146,7 +143,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
       }
       toast({
         title: "Upload failed",
-        description: "Failed to upload image",
+        description: (error as Error).message ?? "Failed to upload image",
         status: "error",
         isClosable: true,
       });
