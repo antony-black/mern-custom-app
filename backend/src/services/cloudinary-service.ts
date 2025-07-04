@@ -1,6 +1,6 @@
-import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
+import { v2 as cloudinary, type UploadApiResponse } from "cloudinary";
 import dotenv from "dotenv";
-import { TResponse } from "./products-service";
+import type { TResponse } from "./products-service";
 
 dotenv.config();
 
