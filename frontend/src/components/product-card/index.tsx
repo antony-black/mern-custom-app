@@ -160,6 +160,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
       transition="all 0.3s"
       _hover={{ transform: "translateY(-5px)", shadow: "xl" }}
       bg={bg}
+      cursor={"pointer"}
     >
       <Image src={product.image} alt={product.name} h={48} w="full" objectFit="contain" />
 
