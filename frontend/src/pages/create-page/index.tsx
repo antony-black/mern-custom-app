@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 
 import type { TResponse } from "../../../../backend/src/services/products-service";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
+import { PageWrapperComponent } from "@/components/page-wrapper-component";
 import { useProductStore, type TProduct } from "@/store";
 // TODO: move out the same code from the "ProductCard" and "CreatePage"
 
@@ -114,6 +115,8 @@ export const CreatePage: React.FC = () => {
 
   return (
     <Container maxW={"container.sm"}>
+      <PageWrapperComponent title="add new | Product Store" content="Add a new amazing product!" />
+
       <VStack spacing={8}>
         <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8}>
           Create New Product

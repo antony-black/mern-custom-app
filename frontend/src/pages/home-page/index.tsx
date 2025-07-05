@@ -2,6 +2,7 @@ import { Container, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import { PageWrapperComponent } from "@/components/page-wrapper-component";
 import { ProductCard } from "@/components/product-card";
 import { useProductStore } from "@/store";
 
@@ -14,6 +15,8 @@ export const HomePage: React.FC = () => {
 
   return (
     <Container maxW="container.xl" py={12}>
+      <PageWrapperComponent title="Product Store" content="Buy the best products at Product Store!" />
+
       <VStack spacing={8}>
         <Text
           fontSize={"30"}

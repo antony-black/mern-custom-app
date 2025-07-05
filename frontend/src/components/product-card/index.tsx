@@ -21,6 +21,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { PageWrapperComponent } from "../page-wrapper-component";
 import type { TResponse } from "../../../../backend/src/services/products-service";
 import type { IProduct } from "@/store";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
@@ -185,6 +186,8 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
       </Box>
 
       <Modal isOpen={isOpen} onClose={onClose}>
+        <PageWrapperComponent title="edit | Product Store" content="Edit your product details" />
+
         <ModalOverlay />
 
         <ModalContent>
