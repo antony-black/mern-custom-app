@@ -21,7 +21,7 @@
     "framer-motion": "^11.3.17",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-helmet-async": "3.0.2",
+    "react-helmet-async": "^2.0.5",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.2",
     "zustand": "^5.0.5"
@@ -51,6 +51,7 @@
     "stylelint-config-standard": "^38.0.0",
     "stylelint-config-standard-scss": "^15.0.1",
     "stylelint-scss": "^6.12.1",
+    "terser": "^5.43.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "typescript-transform-paths": "^3.5.5",
