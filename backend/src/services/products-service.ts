@@ -9,7 +9,6 @@ export type TResponse<T = IProduct> = {
 
 export const getAllProductsService = async (page = 1, limit = 6): Promise<TResponse<IProduct[]>> => {
   try {
-    // const products = await Product.find();
     const skip = (page - 1) * limit;
     const products = await Product.find().skip(skip).limit(limit);
     if (products.length <= 0) {
