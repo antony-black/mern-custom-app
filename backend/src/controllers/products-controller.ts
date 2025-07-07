@@ -8,7 +8,10 @@ import {
 } from "../services/products-service";
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
-  const { success, message, data } = await getAllProductsService();
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 6;
+
+  const { success, message, data } = await getAllProductsService(page, limit);
   if (!success) {
     res.status(500).json({ success, message });
     return;

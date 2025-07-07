@@ -18,15 +18,20 @@ export type TProduct = {
 
 type ProductStore = {
   products: IProduct[];
+  page: number;
+  hasMore: boolean;
   setProducts: (products: IProduct[]) => void;
   createProduct: (product: TProduct) => Promise<TResponse>;
   fetchProducts: () => Promise<TResponse<IProduct[]>>;
+  loadMoreProducts: () => Promise<void>;
   deleteProduct: (productId: string) => Promise<TResponse>;
   updateProduct: (productId: string, updatedProduct: IProduct) => Promise<TResponse>;
 };
 
-export const useProductStore = create<ProductStore>((set) => ({
+export const useProductStore = create<ProductStore>((set, get) => ({
   products: [],
+  page: 1,
+  hasMore: true,
   setProducts: (products) => {
     set({ products });
   },
@@ -52,13 +57,28 @@ export const useProductStore = create<ProductStore>((set) => ({
   },
 
   fetchProducts: async () => {
-    const res = await fetch("/api/products");
-
+    const res = await fetch(`/api/products?page=1&limit=6`);
     const { success, message, data } = await res.json();
 
-    set({ products: data });
+    set({ products: data, page: 2, hasMore: data.length === 6 });
 
     return { success, message, data };
+  },
+
+  loadMoreProducts: async () => {
+    const { page, products, hasMore } = get();
+    if (!hasMore) return;
+
+    const res = await fetch(`/api/products?page=${page}&limit=6`);
+    const { data } = await res.json();
+
+    if (data) {
+      set({
+        products: [...products, ...data],
+        page: page + 1,
+        hasMore: data.length === 6,
+      });
+    }
   },
 
   deleteProduct: async (productId) => {
