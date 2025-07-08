@@ -1,12 +1,12 @@
-import { Box, Button, Container, Heading, Input, useColorModeValue, useToast, VStack } from "@chakra-ui/react";
+import { Box, Container, Heading, useColorModeValue, useToast, VStack } from "@chakra-ui/react";
 
 import { useRef, useState } from "react";
 
 import type { TResponse } from "../../../../backend/src/services/products-service";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import { PageWrapperComponent } from "@/components/page-wrapper-component";
+import { ProductForm } from "@/components/product-form";
 import { useProductStore, type TProduct } from "@/store";
-// TODO: move out the same code from the "ProductCard" and "CreatePage"
 
 export const CreatePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -22,27 +22,16 @@ export const CreatePage: React.FC = () => {
 
   const handleAddProduct = async (): Promise<void> => {
     const { success, message } = await createProduct(newProduct);
-    if (!success) {
-      toast({
-        title: "Error",
-        description: message,
-        status: "error",
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: message,
-        status: "success",
-        isClosable: true,
-      });
-    }
+    toast({
+      title: success ? "Success" : "Error",
+      description: message,
+      status: success ? "success" : "error",
+      isClosable: true,
+    });
 
     setNewProduct({ name: "", price: 0, image: "" });
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    fileInputRef.current && (fileInputRef.current.value = "");
   };
 
   const processFileBeforeUpload = async (file: File): Promise<TResponse<TCloudinaryImageRaw>> => {
@@ -101,13 +90,6 @@ export const CreatePage: React.FC = () => {
       if (error instanceof Error) {
         console.error("Upload error.", error.message);
       }
-
-      toast({
-        title: "Upload failed",
-        description: (error as Error).message ?? "Failed to upload image",
-        status: "error",
-        isClosable: true,
-      });
     } finally {
       setLoading(!true);
     }
@@ -124,39 +106,15 @@ export const CreatePage: React.FC = () => {
 
         <Box w={"full"} bg={useColorModeValue("white", "gray.800")} p={6} rounded={"lg"} shadow={"md"}>
           <VStack spacing={4}>
-            <Input
-              placeholder="Product Name"
-              name="name"
-              value={newProduct.name}
-              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+            <ProductForm
+              formId="create"
+              product={newProduct}
+              setProduct={setNewProduct}
+              onFileSelect={handleUploadFile}
+              onAddProduct={handleAddProduct}
+              isLoading={isLoading}
+              fileInputRef={fileInputRef}
             />
-            <Input
-              placeholder="Price"
-              name="price"
-              type="number"
-              value={newProduct.price}
-              onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
-            />
-            <Input
-              ref={fileInputRef}
-              placeholder="Image"
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
-
-                if (!file) {
-                  return;
-                }
-
-                await handleUploadFile(file);
-              }}
-            />
-
-            <Button colorScheme="blue" onClick={handleAddProduct} w="full" isLoading={isLoading}>
-              Add Product
-            </Button>
           </VStack>
         </Box>
       </VStack>

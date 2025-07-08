@@ -6,7 +6,6 @@ import {
   HStack,
   IconButton,
   Image,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -22,15 +21,17 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { PageWrapperComponent } from "../page-wrapper-component";
+import { ProductForm } from "../product-form";
 import type { TResponse } from "../../../../backend/src/services/products-service";
 import type { IProduct } from "@/store";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import { useProductStore } from "@/store";
 
+//TODO!: change type "any"
 type TProductCardProps = {
-  product: IProduct;
+  // product: IProduct;
+  product: any;
 };
-// TODO: move out the same code from the "ProductCard" and "CreatePage"
 
 export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
@@ -45,47 +46,26 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
 
   const handleDeleteProduct = async (productId: string) => {
     const { success, message } = await deleteProduct(productId);
-    if (!success) {
-      toast({
-        title: "Error",
-        description: message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: message,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
+    toast({
+      title: success ? "Success" : "Error",
+      description: message,
+      status: success ? "success" : "error",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   const handleUpdateProduct = async (productId: string, updatedProduct: IProduct) => {
     const { success, message } = await updateProduct(productId, updatedProduct);
+    toast({
+      title: success ? "Success" : "Error",
+      description: message,
+      status: success ? "success" : "error",
+      duration: 3000,
+      isClosable: true,
+    });
 
     onClose();
-
-    if (!success) {
-      toast({
-        title: "Error",
-        description: message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: "Product updated successfully",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
   };
 
   const processFileBeforeUpload = async (file: File): Promise<TResponse<TCloudinaryImageRaw>> => {
@@ -108,22 +88,17 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
       setUpdatedProduct((prev) => ({ ...prev, image: data.secure_url, publicId: data.public_id }));
 
       toast({
-        title: "Image uploaded",
-        description: message,
-        status: "success",
+        title: success ? "Image uploaded" : "Upload failed",
+        description: success ? message : "Something went wrong during upload.",
+        status: success ? "success" : "error",
         isClosable: true,
       });
 
       return { success, message, data };
     } catch (error) {
-      console.error("Upload error:", error);
-
-      toast({
-        title: "Upload failed",
-        description: (error as Error).message ?? "Something went wrong during upload.",
-        status: "error",
-        isClosable: true,
-      });
+      if (error instanceof Error) {
+        console.error("Upload error.", error.message);
+      }
 
       throw new Error("Upload error.");
     }
@@ -142,12 +117,6 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
       if (error instanceof Error) {
         console.error("Upload error.", error.message);
       }
-      toast({
-        title: "Upload failed",
-        description: (error as Error).message ?? "Failed to upload image",
-        status: "error",
-        isClosable: true,
-      });
     } finally {
       setLoading(!true);
     }
@@ -195,33 +164,11 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={4}>
-              <Input
-                placeholder="Product Name"
-                name="name"
-                value={updatedProduct.name}
-                onChange={(e) => setUpdatedProduct({ ...updatedProduct, name: e.target.value })}
-              />
-              <Input
-                placeholder="Price"
-                name="price"
-                type="number"
-                value={updatedProduct.price}
-                onChange={(e) => setUpdatedProduct({ ...updatedProduct, price: parseFloat(e.target.value) })}
-              />
-              <Input
-                placeholder="Image"
-                name="image"
-                type="file"
-                accept="image/*"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-
-                  if (!file) {
-                    return;
-                  }
-
-                  await handleUploadFile(file);
-                }}
+              <ProductForm
+                formId="update"
+                product={updatedProduct}
+                setProduct={setUpdatedProduct}
+                onFileSelect={handleUploadFile}
               />
             </VStack>
           </ModalBody>
