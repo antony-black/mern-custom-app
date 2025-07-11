@@ -1,27 +1,24 @@
-import Product, { type IProduct } from "../models/product-model";
+import Product from "../models/product-model";
+import { IProduct, TApiResponse, TProduct } from "../types";
+import { transformDbResponse, transformDbResponseList } from "../utility/transform-db-response";
 import { removeFromCloudinaryService } from "./cloudinary-service";
 
-export type TResponse<T = IProduct> = {
-  success: boolean;
-  message: string;
-  data?: T;
-};
-
-export const getAllProductsService = async (page = 1, limit = 6): Promise<TResponse<IProduct[]>> => {
+export const getAllProductsService = async (page = 1, limit = 6): Promise<TApiResponse<TProduct[]>> => {
   try {
     const skip = (page - 1) * limit;
     const products = await Product.find().skip(skip).limit(limit);
     if (products.length <= 0) {
       return {
-        success: false,
-        message: "Products not found.",
+        success: true,
+        message: products.length ? "Products are available." : "No more products.",
+        data: [],
       };
     }
 
     return {
       success: true,
       message: "Products are available.",
-      data: products,
+      data: transformDbResponseList(products),
     };
   } catch (error) {
     if (error instanceof Error) {
@@ -35,7 +32,7 @@ export const getAllProductsService = async (page = 1, limit = 6): Promise<TRespo
   }
 };
 
-export const addProductService = async (product: IProduct): Promise<TResponse> => {
+export const addProductService = async (product: IProduct): Promise<TApiResponse> => {
   const newProduct = new Product(product);
   if (!newProduct) {
     return {
@@ -56,7 +53,7 @@ export const addProductService = async (product: IProduct): Promise<TResponse> =
     return {
       success: true,
       message: "A new product added.",
-      data: savedProduct,
+      data: transformDbResponse(savedProduct),
     };
   } catch (error) {
     if (error instanceof Error) {
@@ -74,7 +71,7 @@ export const addProductService = async (product: IProduct): Promise<TResponse> =
   }
 };
 
-export const updateProductService = async (id: string, updatedProductData: IProduct): Promise<TResponse> => {
+export const updateProductService = async (id: string, updatedProductData: IProduct): Promise<TApiResponse> => {
   try {
     const hasProduct = await Product.findById({ _id: id });
     if (!hasProduct) {
@@ -84,7 +81,7 @@ export const updateProductService = async (id: string, updatedProductData: IProd
       };
     }
 
-    if (hasProduct.publicId !== updatedProductData.publicId) {
+    if (hasProduct.publicId && hasProduct.publicId !== updatedProductData.publicId) {
       await removeFromCloudinaryService(hasProduct.publicId);
     }
 
@@ -92,10 +89,17 @@ export const updateProductService = async (id: string, updatedProductData: IProd
       new: true,
     });
 
+    if (!updatedProduct) {
+      return {
+        success: false,
+        message: "False during updating process.",
+      };
+    }
+
     return {
       success: true,
       message: "Product updated.",
-      data: updatedProduct?.toObject(),
+      data: transformDbResponse(updatedProduct),
     };
   } catch (error) {
     if (error instanceof Error) {
@@ -113,13 +117,19 @@ export const updateProductService = async (id: string, updatedProductData: IProd
   }
 };
 
-export const removeProductsService = async (id: string): Promise<TResponse> => {
+export const removeProductsService = async (id: string): Promise<TApiResponse> => {
   try {
     const product = await Product.findById({ _id: id });
     if (!product) {
       return {
         success: false,
         message: "Product not found.",
+      };
+    }
+    if (!product.publicId) {
+      return {
+        success: false,
+        message: "Image not found.",
       };
     }
 

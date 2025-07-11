@@ -1,6 +1,6 @@
 import { v2 as cloudinary, type UploadApiResponse } from "cloudinary";
 import dotenv from "dotenv";
-import type { TResponse } from "./products-service";
+import { TApiResponse } from "../types";
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-export const uploadToCloudinaryService = async (filePath: string): Promise<TResponse<UploadApiResponse>> => {
+export const uploadToCloudinaryService = async (filePath: string): Promise<TApiResponse<UploadApiResponse>> => {
   try {
     const image = await cloudinary.uploader.upload(filePath, {
       folder: "mern-products",
@@ -34,7 +34,7 @@ export const uploadToCloudinaryService = async (filePath: string): Promise<TResp
   }
 };
 
-export const removeFromCloudinaryService = async (publicId: string): Promise<TResponse> => {
+export const removeFromCloudinaryService = async (publicId: string): Promise<TApiResponse> => {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
     if (result.result !== "ok" && result.result !== "not_found") {

@@ -1,31 +1,16 @@
 import { create } from "zustand";
-import type { IProduct as IProductBase } from "../../../backend/src/models/product-model";
-import type { TResponse } from "../../../backend/src/services/products-service";
-
-// Extend the backend model to include MongoDB-specific properties
-export interface IProduct extends IProductBase {
-  _id: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export type TProduct = {
-  name: string;
-  price: number;
-  image: string;
-  publicId?: string;
-};
+import type { IProduct, TApiResponse, TProduct } from "../../../backend/src/types";
 
 type ProductStore = {
-  products: IProduct[];
+  products: TProduct[];
   page: number;
   hasMore: boolean;
-  setProducts: (products: IProduct[]) => void;
-  createProduct: (product: TProduct) => Promise<TResponse>;
-  fetchProducts: () => Promise<TResponse<IProduct[]>>;
+  setProducts: (products: TProduct[]) => void;
+  createProduct: (product: IProduct) => Promise<TApiResponse<TProduct>>;
+  fetchProducts: () => Promise<TApiResponse<TProduct[]>>;
   loadMoreProducts: () => Promise<void>;
-  deleteProduct: (productId: string) => Promise<TResponse>;
-  updateProduct: (productId: string, updatedProduct: IProduct) => Promise<TResponse>;
+  deleteProduct: (productId: string) => Promise<TApiResponse>;
+  updateProduct: (productId: string, updatedProduct: TProduct) => Promise<TApiResponse<TProduct>>;
 };
 
 export const useProductStore = create<ProductStore>((set, get) => ({
@@ -51,7 +36,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
 
     const { success, message, data } = await res.json();
 
-    set((state) => ({ products: { ...state.products, ...data } }));
+    set((state) => ({ products: [...state.products, data] }));
 
     return { success, message, data };
   },
@@ -70,15 +55,16 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     if (!hasMore) return;
 
     const res = await fetch(`/api/products?page=${page}&limit=6`);
-    const { data } = await res.json();
+    const json: TApiResponse<TProduct[]> = await res.json();
+    const data = json.data ?? [];
 
-    if (data) {
-      set({
-        products: [...products, ...data],
-        page: page + 1,
-        hasMore: data.length === 6,
-      });
-    }
+    const newProducts = data.filter((newProd) => !products.some((prod) => prod._id === newProd._id));
+
+    set({
+      products: [...products, ...newProducts],
+      page: page + 1,
+      hasMore: data.length === 6,
+    });
   },
 
   deleteProduct: async (productId) => {

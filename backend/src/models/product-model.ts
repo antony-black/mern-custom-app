@@ -1,11 +1,5 @@
 import mongoose from "mongoose";
-
-export interface IProduct {
-  name: string;
-  price: number;
-  image: string;
-  publicId: string;
-}
+import { IProduct } from "../types";
 
 const productSchema = new mongoose.Schema<IProduct>(
   {

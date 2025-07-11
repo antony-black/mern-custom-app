@@ -22,19 +22,16 @@ import {
 import React, { useState } from "react";
 import { PageWrapperComponent } from "../page-wrapper-component";
 import { ProductForm } from "../product-form";
-import type { TResponse } from "../../../../backend/src/services/products-service";
-import type { IProduct } from "@/store";
+import type { IProduct, TApiResponse, TProduct } from "../../../../backend/src/types";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import { useProductStore } from "@/store";
 
-//TODO!: change type "any"
 type TProductCardProps = {
-  // product: IProduct;
-  product: any;
+  product: TProduct;
 };
 
 export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
-  const [updatedProduct, setUpdatedProduct] = useState(product);
+  const [updatedProduct, setUpdatedProduct] = useState<IProduct | TProduct>(product);
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const textColor = useColorModeValue("gray.600", "gray.200");
@@ -55,7 +52,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
     });
   };
 
-  const handleUpdateProduct = async (productId: string, updatedProduct: IProduct) => {
+  const handleUpdateProduct = async (productId: string, updatedProduct: TProduct) => {
     const { success, message } = await updateProduct(productId, updatedProduct);
     toast({
       title: success ? "Success" : "Error",
@@ -68,7 +65,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
     onClose();
   };
 
-  const processFileBeforeUpload = async (file: File): Promise<TResponse<TCloudinaryImageRaw>> => {
+  const processFileBeforeUpload = async (file: File): Promise<TApiResponse<TCloudinaryImageRaw>> => {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -78,7 +75,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
         body: formData,
       });
 
-      const uploadedImage: TResponse<TCloudinaryImageRaw> = await res.json();
+      const uploadedImage: TApiResponse<TCloudinaryImageRaw> = await res.json();
       const { success, message, data } = uploadedImage;
 
       if (!res.ok || !data?.secure_url) {
@@ -177,7 +174,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() => handleUpdateProduct(product._id, updatedProduct)}
+              onClick={() => handleUpdateProduct(product._id, updatedProduct as TProduct)}
               isLoading={isLoading}
             >
               Update

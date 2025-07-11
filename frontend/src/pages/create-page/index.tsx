@@ -2,15 +2,15 @@ import { Box, Container, Heading, useColorModeValue, useToast, VStack } from "@c
 
 import { useRef, useState } from "react";
 
-import type { TResponse } from "../../../../backend/src/services/products-service";
+import type { IProduct, TApiResponse } from "../../../../backend/src/types";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import { PageWrapperComponent } from "@/components/page-wrapper-component";
 import { ProductForm } from "@/components/product-form";
-import { useProductStore, type TProduct } from "@/store";
+import { useProductStore } from "@/store";
 
 export const CreatePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [newProduct, setNewProduct] = useState<TProduct>({
+  const [newProduct, setNewProduct] = useState<IProduct>({
     name: "",
     price: 0,
     image: "",
@@ -34,7 +34,7 @@ export const CreatePage: React.FC = () => {
     fileInputRef.current && (fileInputRef.current.value = "");
   };
 
-  const processFileBeforeUpload = async (file: File): Promise<TResponse<TCloudinaryImageRaw>> => {
+  const processFileBeforeUpload = async (file: File): Promise<TApiResponse<TCloudinaryImageRaw>> => {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -44,7 +44,7 @@ export const CreatePage: React.FC = () => {
         body: formData,
       });
 
-      const uploadedImage: TResponse<TCloudinaryImageRaw> = await res.json();
+      const uploadedImage: TApiResponse<TCloudinaryImageRaw> = await res.json();
       const { success, message, data } = uploadedImage;
 
       if (!res.ok || !data?.secure_url) {

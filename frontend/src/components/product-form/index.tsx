@@ -1,17 +1,18 @@
 import { VStack, Input, Box, Button, useColorModeValue } from "@chakra-ui/react";
-import type { TProduct } from "@/store";
+import type { IProduct, TProduct } from "../../../../backend/src/types";
+import { productTypeValidation } from "@/utils/product-type-validation";
 
-type TProductForm = {
+type TProductFormProps = {
   formId: string;
-  product: TProduct;
-  setProduct: React.Dispatch<React.SetStateAction<TProduct>>;
+  product: IProduct | TProduct;
+  setProduct: React.Dispatch<React.SetStateAction<IProduct | TProduct>>;
   onFileSelect: (file: File) => void;
   onAddProduct?: () => Promise<void>;
   isLoading?: boolean;
   fileInputRef?: React.RefObject<HTMLInputElement | null>;
 };
 
-export const ProductForm: React.FC<TProductForm> = ({
+export const ProductForm: React.FC<TProductFormProps> = ({
   formId,
   product,
   setProduct,
@@ -20,21 +21,23 @@ export const ProductForm: React.FC<TProductForm> = ({
   isLoading,
   fileInputRef,
 }) => {
+  const validatedProduct = productTypeValidation(product);
+
   return (
     <Box w={"full"} bg={useColorModeValue("white", "gray.800")} p={6} rounded={"lg"} shadow={"md"}>
       <VStack spacing={4}>
         <Input
           placeholder="Product Name"
           name="name"
-          value={product.name}
-          onChange={(e) => setProduct({ ...product, name: e.target.value })}
+          value={validatedProduct.name}
+          onChange={(e) => setProduct({ ...validatedProduct, name: e.target.value })}
         />
         <Input
           placeholder="Price"
           name="price"
           type="number"
-          value={product.price}
-          onChange={(e) => setProduct({ ...product, price: parseFloat(e.target.value) })}
+          value={validatedProduct.price}
+          onChange={(e) => setProduct({ ...validatedProduct, price: parseFloat(e.target.value) })}
         />
         <Input
           ref={fileInputRef}

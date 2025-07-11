@@ -2,7 +2,6 @@ import fs from "fs";
 
 import { RequestHandler } from "express";
 import { removeFromCloudinaryService, uploadToCloudinaryService } from "../services/cloudinary-service";
-import { TResponse } from "../services/products-service";
 
 export const uploadToCloudinary: RequestHandler = async (req, res) => {
   const filePath = req.file?.path;
@@ -21,7 +20,7 @@ export const uploadToCloudinary: RequestHandler = async (req, res) => {
 export const removeFromCloudinary: RequestHandler = async (req, res) => {
   const { publicId } = req.params;
 
-  const dataAfterDeletion: TResponse = await removeFromCloudinaryService(publicId);
+  const dataAfterDeletion = await removeFromCloudinaryService(publicId);
 
   res.json(dataAfterDeletion);
 };
