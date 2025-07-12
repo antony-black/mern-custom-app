@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { IProduct, TApiResponse, TProduct } from "../../../backend/src/types";
+import type { IProduct, TApiResponse, TProduct } from "@shared/types";
 
 type ProductStore = {
   products: TProduct[];

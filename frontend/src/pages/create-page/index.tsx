@@ -2,8 +2,8 @@ import { Box, Container, Heading, useColorModeValue, useToast, VStack } from "@c
 
 import { useRef, useState } from "react";
 
-import type { IProduct, TApiResponse } from "../../../../backend/src/types";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
+import type { IProduct, TApiResponse } from "@shared/types";
 import { PageWrapperComponent } from "@/components/page-wrapper-component";
 import { ProductForm } from "@/components/product-form";
 import { useProductStore } from "@/store";

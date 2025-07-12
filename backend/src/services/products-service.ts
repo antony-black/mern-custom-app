@@ -1,7 +1,7 @@
-import Product from "../models/product-model";
-import { IProduct, TApiResponse, TProduct } from "../types";
-import { transformDbResponse, transformDbResponseList } from "../utility/transform-db-response";
+import { IProduct, TApiResponse, TProduct } from "@shared/types";
 import { removeFromCloudinaryService } from "./cloudinary-service";
+import Product from "@/models/product-model";
+import { transformDbResponseList, transformDbResponse } from "@/utility/transform-db-response";
 
 export const getAllProductsService = async (page = 1, limit = 6): Promise<TApiResponse<TProduct[]>> => {
   try {

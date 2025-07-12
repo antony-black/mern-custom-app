@@ -1,5 +1,5 @@
+import { IProduct } from "@shared/types";
 import mongoose from "mongoose";
-import { IProduct } from "../types";
 
 const productSchema = new mongoose.Schema<IProduct>(
   {

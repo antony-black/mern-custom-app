@@ -1,5 +1,5 @@
 import { VStack, Input, Box, Button, useColorModeValue } from "@chakra-ui/react";
-import type { IProduct, TProduct } from "../../../../backend/src/types";
+import type { IProduct, TProduct } from "@shared/types";
 import { productTypeValidation } from "@/utils/product-type-validation";
 
 type TProductFormProps = {

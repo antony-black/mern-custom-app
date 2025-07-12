@@ -1,7 +1,7 @@
 import fs from "fs";
 
 import { RequestHandler } from "express";
-import { removeFromCloudinaryService, uploadToCloudinaryService } from "../services/cloudinary-service";
+import { uploadToCloudinaryService, removeFromCloudinaryService } from "@/services/cloudinary-service";
 
 export const uploadToCloudinary: RequestHandler = async (req, res) => {
   const filePath = req.file?.path;

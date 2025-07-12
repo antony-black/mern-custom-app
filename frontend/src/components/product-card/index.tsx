@@ -22,8 +22,8 @@ import {
 import React, { useState } from "react";
 import { PageWrapperComponent } from "../page-wrapper-component";
 import { ProductForm } from "../product-form";
-import type { IProduct, TApiResponse, TProduct } from "../../../../backend/src/types";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
+import type { TProduct, IProduct, TApiResponse } from "@shared/types";
 import { useProductStore } from "@/store";
 
 type TProductCardProps = {
