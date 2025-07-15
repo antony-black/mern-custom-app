@@ -2,5 +2,8 @@
   "name": "@mern-custom-app/shared",
   "private": true,
   "version": "0.0.0",
-  "scripts": {}
+  "scripts": {},
+  "dependencies": {
+    "zod": "^4.0.5"
+  }
 }

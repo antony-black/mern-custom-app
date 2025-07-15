@@ -23,7 +23,7 @@ import React, { useState } from "react";
 import { PageWrapperComponent } from "../page-wrapper-component";
 import { ProductForm } from "../product-form";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
-import type { TProduct, IProduct, TApiResponse } from "@shared/types";
+import type { TProduct, TProductBase, TApiResponse } from "@shared/types";
 import { useProductStore } from "@/store";
 
 type TProductCardProps = {
@@ -31,7 +31,7 @@ type TProductCardProps = {
 };
 
 export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
-  const [updatedProduct, setUpdatedProduct] = useState<IProduct | TProduct>(product);
+  const [updatedProduct, setUpdatedProduct] = useState<TProductBase | TProduct>(product);
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const textColor = useColorModeValue("gray.600", "gray.200");

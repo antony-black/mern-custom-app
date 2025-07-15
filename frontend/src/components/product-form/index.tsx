@@ -1,11 +1,11 @@
 import { VStack, Input, Box, Button, useColorModeValue } from "@chakra-ui/react";
-import type { IProduct, TProduct } from "@shared/types";
+import type { TProductBase, TProduct } from "@shared/types";
 import { productTypeValidation } from "@/utils/product-type-validation";
 
 type TProductFormProps = {
   formId: string;
-  product: IProduct | TProduct;
-  setProduct: React.Dispatch<React.SetStateAction<IProduct | TProduct>>;
+  product: TProductBase | TProduct;
+  setProduct: React.Dispatch<React.SetStateAction<TProductBase | TProduct>>;
   onFileSelect: (file: File) => void;
   onAddProduct?: () => Promise<void>;
   isLoading?: boolean;

@@ -1,6 +1,6 @@
-import { TApiResponse } from "@shared/types";
 import { v2 as cloudinary, type UploadApiResponse } from "cloudinary";
 import dotenv from "dotenv";
+import { TApiResponse } from "../../../shared/src/types/index";
 
 dotenv.config();
 
@@ -34,7 +34,7 @@ export const uploadToCloudinaryService = async (filePath: string): Promise<TApiR
   }
 };
 
-export const removeFromCloudinaryService = async (publicId: string): Promise<TApiResponse> => {
+export const removeFromCloudinaryService = async (publicId: string): Promise<TApiResponse<void>> => {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
     if (result.result !== "ok" && result.result !== "not_found") {

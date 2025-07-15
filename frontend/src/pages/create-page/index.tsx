@@ -3,14 +3,14 @@ import { Box, Container, Heading, useColorModeValue, useToast, VStack } from "@c
 import { useRef, useState } from "react";
 
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
-import type { IProduct, TApiResponse } from "@shared/types";
+import type { TProductBase, TApiResponse } from "@shared/types";
 import { PageWrapperComponent } from "@/components/page-wrapper-component";
 import { ProductForm } from "@/components/product-form";
 import { useProductStore } from "@/store";
 
 export const CreatePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [newProduct, setNewProduct] = useState<IProduct>({
+  const [newProduct, setNewProduct] = useState<TProductBase>({
     name: "",
     price: 0,
     image: "",

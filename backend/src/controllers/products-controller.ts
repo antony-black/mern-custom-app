@@ -4,7 +4,7 @@ import {
   getAllProductsService,
   removeProductsService,
   updateProductService,
-} from "@/services/products-service";
+} from "../services/products-service";
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   const page = parseInt(req.query.page as string) || 1;

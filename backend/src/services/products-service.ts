@@ -1,9 +1,15 @@
-import { IProduct, TApiResponse, TProduct } from "@shared/types";
+import {
+  TApiResponse,
+  TProduct,
+  TProductApiResponse,
+  TProductBase,
+  TProductListApiResponse,
+} from "../../../shared/src/types/index";
+import Product from "../models/product-model";
+import { transformDbResponseList, transformDbResponse } from "../utility/transform-db-response";
 import { removeFromCloudinaryService } from "./cloudinary-service";
-import Product from "@/models/product-model";
-import { transformDbResponseList, transformDbResponse } from "@/utility/transform-db-response";
 
-export const getAllProductsService = async (page = 1, limit = 6): Promise<TApiResponse<TProduct[]>> => {
+export const getAllProductsService = async (page = 1, limit = 6): Promise<TProductListApiResponse> => {
   try {
     const skip = (page - 1) * limit;
     const products = await Product.find().skip(skip).limit(limit);
@@ -32,7 +38,7 @@ export const getAllProductsService = async (page = 1, limit = 6): Promise<TApiRe
   }
 };
 
-export const addProductService = async (product: IProduct): Promise<TApiResponse> => {
+export const addProductService = async (product: TProductBase): Promise<TProductApiResponse> => {
   const newProduct = new Product(product);
   if (!newProduct) {
     return {
@@ -71,7 +77,7 @@ export const addProductService = async (product: IProduct): Promise<TApiResponse
   }
 };
 
-export const updateProductService = async (id: string, updatedProductData: IProduct): Promise<TApiResponse> => {
+export const updateProductService = async (id: string, updatedProductData: TProduct): Promise<TProductApiResponse> => {
   try {
     const hasProduct = await Product.findById({ _id: id });
     if (!hasProduct) {
@@ -117,7 +123,7 @@ export const updateProductService = async (id: string, updatedProductData: IProd
   }
 };
 
-export const removeProductsService = async (id: string): Promise<TApiResponse> => {
+export const removeProductsService = async (id: string): Promise<TProductApiResponse> => {
   try {
     const product = await Product.findById({ _id: id });
     if (!product) {

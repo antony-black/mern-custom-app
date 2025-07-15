@@ -1,7 +1,7 @@
-import { IProduct } from "@shared/types";
 import mongoose from "mongoose";
+import { TProductBase } from "../../../shared/src/types/index";
 
-const productSchema = new mongoose.Schema<IProduct>(
+const productSchema = new mongoose.Schema<TProductBase>(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true },
@@ -13,6 +13,6 @@ const productSchema = new mongoose.Schema<IProduct>(
   },
 );
 
-const Product = mongoose.model<IProduct>("Product", productSchema);
+const Product = mongoose.model<TProductBase>("Product", productSchema);
 
 export default Product;
