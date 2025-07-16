@@ -1,13 +1,6 @@
+import { zProductBaseSchema, zProductResponseSchema, zProductListResponseSchema } from "@shared/types/zod";
 import { create } from "zustand";
-import {
-  type TProductBase,
-  type TProduct,
-  zProductBaseSchema,
-  zProductResponseSchema,
-  type TProductApiResponse,
-  type TProductListApiResponse,
-  zProductListResponseSchema,
-} from "../../../shared/src/types/index";
+import type { TProduct, TProductBase, TProductApiResponse, TProductListApiResponse } from "@shared/types";
 
 type ProductStore = {
   products: TProduct[];
