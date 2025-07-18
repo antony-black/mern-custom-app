@@ -19,7 +19,6 @@ export type TApiResponse<T> = {
   message: string;
   data?: T;
 };
-// ==================================
 
 type TDbDocSchema = z.infer<typeof zDbDocSchema>;
 

@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const zProductBaseSchema = z.object({
   name: z.string().min(3, 'Please, let it be at least 3 characters.'),
-  price: z.number().positive('Should be a positive number.'),
+  price: z.number().min(0).positive('Should be a positive number.'),
   image: z
     .url({ message: 'Image must be a valid URL.' })
     .refine((url) => /\.(jpeg|jpg|png|webp|svg)$/i.test(url), {

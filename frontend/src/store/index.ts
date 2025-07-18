@@ -23,6 +23,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   },
 
   createProduct: async (newProduct) => {
+    console.log("newProduct:", newProduct);
     const isValidInput = zProductBaseSchema.safeParse(newProduct);
     if (!isValidInput.success) {
       return { success: isValidInput.success, message: isValidInput.error.message ?? "Please fill in all fields." };

@@ -2,10 +2,14 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Heading,
   HStack,
   IconButton,
   Image,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,9 +23,11 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { zProductBaseSchema } from "@shared/types/zod";
+import React, { useState, useEffect } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { PageWrapperComponent } from "../page-wrapper-component";
-import { ProductForm } from "../product-form";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import type { TProduct, TProductBase, TApiResponse } from "@shared/types";
 import { useProductStore } from "@/store";
@@ -31,15 +37,46 @@ type TProductCardProps = {
 };
 
 export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
-  const [updatedProduct, setUpdatedProduct] = useState<TProductBase | TProduct>(product);
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+    reset,
+    setValue,
+  } = useForm<TProductBase>({
+    resolver: zodResolver(zProductBaseSchema),
+    defaultValues: {
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      publicId: product.publicId,
+    },
+  });
 
-  const textColor = useColorModeValue("gray.600", "gray.200");
-  const bg = useColorModeValue("white", "gray.800");
+  const [isUploading, setUploading] = useState<boolean>(false);
 
   const { deleteProduct, updateProduct } = useProductStore();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const textColor = useColorModeValue("gray.600", "gray.200");
+  const bg = useColorModeValue("white", "gray.800");
+
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        publicId: product.publicId,
+      });
+    }
+  }, [isOpen, product, reset]);
+
+  const onSubmit: SubmitHandler<TProductBase> = async (data) => {
+    await handleUpdateProduct(product._id, data);
+    reset();
+  };
 
   const handleDeleteProduct = async (productId: string) => {
     const { success, message } = await deleteProduct(productId);
@@ -52,7 +89,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
     });
   };
 
-  const handleUpdateProduct = async (productId: string, updatedProduct: TProduct) => {
+  const handleUpdateProduct = async (productId: string, updatedProduct: any) => {
     const { success, message } = await updateProduct(productId, updatedProduct);
     toast({
       title: success ? "Success" : "Error",
@@ -65,7 +102,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
     onClose();
   };
 
-  const processFileBeforeUpload = async (file: File): Promise<TApiResponse<TCloudinaryImageRaw>> => {
+  const uploadFile = async (file: File): Promise<TApiResponse<TCloudinaryImageRaw>> => {
     const formData = new FormData();
     formData.append("image", file);
 
@@ -82,12 +119,10 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
         throw new Error("Upload succeeded but no image URL was returned.");
       }
 
-      setUpdatedProduct((prev) => ({ ...prev, image: data.secure_url, publicId: data.public_id }));
-
       toast({
-        title: success ? "Image uploaded" : "Upload failed",
-        description: success ? message : "Something went wrong during upload.",
-        status: success ? "success" : "error",
+        title: "Image uploaded",
+        description: message,
+        status: "success",
         isClosable: true,
       });
 
@@ -97,25 +132,40 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
         console.error("Upload error.", error.message);
       }
 
+      toast({
+        title: "Upload failed",
+        description: (error as Error).message ?? "Something went wrong during upload.",
+        status: "error",
+        isClosable: true,
+      });
+
       throw new Error("Upload error.");
     }
   };
 
   const handleUploadFile = async (file: File): Promise<void> => {
     try {
-      setLoading(true);
+      setUploading(true);
 
-      const data = await processFileBeforeUpload(file);
+      const uploadedFileData = await uploadFile(file);
+      const { data, success } = uploadedFileData;
 
-      if (data) {
-        setLoading(!data.success);
+      if (success && data?.secure_url) {
+        setValue("image", data.secure_url, {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+        setValue("publicId", data.public_id, {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
       }
     } catch (error) {
       if (error instanceof Error) {
         console.error("Upload error.", error.message);
       }
     } finally {
-      setLoading(!true);
+      setUploading(false);
     }
   };
 
@@ -159,30 +209,71 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
         <ModalContent>
           <ModalHeader>Update Product</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <VStack spacing={4}>
-              <ProductForm
-                formId="update"
-                product={updatedProduct}
-                setProduct={setUpdatedProduct}
-                onFileSelect={handleUploadFile}
-              />
-            </VStack>
-          </ModalBody>
 
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() => handleUpdateProduct(product._id, updatedProduct as TProduct)}
-              isLoading={isLoading}
-            >
-              Update
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              Cancel
-            </Button>
-          </ModalFooter>
+          {/* Move the form to wrap the entire modal content */}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ModalBody>
+              <VStack spacing={4}>
+                <FormControl isInvalid={!!errors.name}>
+                  <FormLabel>Product Name</FormLabel>
+                  <Input
+                    placeholder="Product Name"
+                    {...register("name", {
+                      required: "Product name is required",
+                    })}
+                  />
+                  <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.price}>
+                  <FormLabel>Price</FormLabel>
+                  <Input
+                    placeholder="Price"
+                    {...register("price", {
+                      required: "Price is required",
+                      valueAsNumber: true,
+                    })}
+                  />
+                  <FormErrorMessage>{errors.price?.message}</FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.image}>
+                  <FormLabel>Image</FormLabel>
+                  <Input
+                    name="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+
+                      if (!file) {
+                        return;
+                      }
+
+                      await handleUploadFile(file);
+                    }}
+                  />
+                  {/* Fixed: Use correct error field */}
+                  <FormErrorMessage>{errors.image?.message}</FormErrorMessage>
+                </FormControl>
+              </VStack>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                w="full"
+                isLoading={isUploading || isSubmitting}
+                disabled={!isValid || isSubmitting}
+              >
+                Update
+              </Button>
+              <Button variant="ghost" onClick={onClose}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </Box>
