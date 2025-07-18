@@ -11,7 +11,7 @@ type ProductStore = {
   fetchProducts: () => Promise<TProductListApiResponse>;
   loadMoreProducts: () => Promise<TProductApiResponse | undefined>;
   deleteProduct: (productId: string) => Promise<TProductApiResponse>;
-  updateProduct: (productId: string, updatedProduct: TProduct) => Promise<TProductApiResponse>;
+  updateProduct: (productId: string, updatedProduct: TProductBase) => Promise<TProductApiResponse>;
 };
 
 export const useProductStore = create<ProductStore>((set, get) => ({

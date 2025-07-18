@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zProductBaseSchema } from "@shared/types/zod";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { PageWrapperComponent } from "../page-wrapper-component";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
@@ -41,7 +41,6 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
-    reset,
     setValue,
   } = useForm<TProductBase>({
     resolver: zodResolver(zProductBaseSchema),
@@ -62,20 +61,8 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
   const textColor = useColorModeValue("gray.600", "gray.200");
   const bg = useColorModeValue("white", "gray.800");
 
-  useEffect(() => {
-    if (isOpen) {
-      reset({
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        publicId: product.publicId,
-      });
-    }
-  }, [isOpen, product, reset]);
-
   const onSubmit: SubmitHandler<TProductBase> = async (data) => {
     await handleUpdateProduct(product._id, data);
-    reset();
   };
 
   const handleDeleteProduct = async (productId: string) => {
@@ -89,7 +76,8 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
     });
   };
 
-  const handleUpdateProduct = async (productId: string, updatedProduct: any) => {
+  const handleUpdateProduct = async (productId: string, updatedProduct: TProductBase) => {
+    console.log("🚀 Updating product data:", updatedProduct);
     const { success, message } = await updateProduct(productId, updatedProduct);
     toast({
       title: success ? "Success" : "Error",
