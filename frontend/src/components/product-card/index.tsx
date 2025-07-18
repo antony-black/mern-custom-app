@@ -31,6 +31,7 @@ import { PageWrapperComponent } from "../page-wrapper-component";
 import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import type { TProduct, TProductBase, TApiResponse } from "@shared/types";
 import { useProductStore } from "@/store";
+import { productActionHandler } from "@/utils/product-action-handler";
 
 type TProductCardProps = {
   product: TProduct;
@@ -62,32 +63,22 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
   const bg = useColorModeValue("white", "gray.800");
 
   const onSubmit: SubmitHandler<TProductBase> = async (data) => {
-    await handleUpdateProduct(product._id, data);
-  };
-
-  const handleDeleteProduct = async (productId: string) => {
-    const { success, message } = await deleteProduct(productId);
-    toast({
-      title: success ? "Success" : "Error",
-      description: message,
-      status: success ? "success" : "error",
-      duration: 3000,
-      isClosable: true,
-    });
-  };
-
-  const handleUpdateProduct = async (productId: string, updatedProduct: TProductBase) => {
-    console.log("🚀 Updating product data:", updatedProduct);
-    const { success, message } = await updateProduct(productId, updatedProduct);
-    toast({
-      title: success ? "Success" : "Error",
-      description: message,
-      status: success ? "success" : "error",
-      duration: 3000,
-      isClosable: true,
+    await productActionHandler({
+      toast,
+      data: {
+        productId: product._id,
+        updatedData: data,
+      },
+      actionHandler: async ({ productId, updatedData }) => {
+        return updateProduct(productId, updatedData);
+      },
     });
 
     onClose();
+  };
+
+  const handleDeleteProduct = async () => {
+    await productActionHandler({ actionHandler: deleteProduct, toast, data: product._id });
   };
 
   const uploadFile = async (file: File): Promise<TApiResponse<TCloudinaryImageRaw>> => {
@@ -180,12 +171,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
 
         <HStack spacing={2}>
           <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" aria-label={""} />
-          <IconButton
-            icon={<DeleteIcon />}
-            onClick={() => handleDeleteProduct(product._id)}
-            colorScheme="red"
-            aria-label={""}
-          />
+          <IconButton icon={<DeleteIcon />} onClick={handleDeleteProduct} colorScheme="red" aria-label={""} />
         </HStack>
       </Box>
 

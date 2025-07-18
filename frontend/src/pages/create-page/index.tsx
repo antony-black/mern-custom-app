@@ -21,6 +21,7 @@ import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import type { TApiResponse, TProductBase } from "@shared/types";
 import { PageWrapperComponent } from "@/components/page-wrapper-component";
 import { useProductStore } from "@/store";
+import { productActionHandler } from "@/utils/product-action-handler";
 
 const initialFormState: TProductBase = {
   name: "",
@@ -45,19 +46,8 @@ export const CreatePage: React.FC = () => {
   const { createProduct } = useProductStore();
 
   const onSubmit: SubmitHandler<TProductBase> = async (data) => {
-    await handleAddProduct(data);
+    await productActionHandler({ actionHandler: createProduct, toast, data });
     reset();
-  };
-
-  const handleAddProduct = async (data: TProductBase): Promise<void> => {
-    console.log("🚀 Submitting product data:", data);
-    const { success, message } = await createProduct(data);
-    toast({
-      title: success ? "Success" : "Error",
-      description: message,
-      status: success ? "success" : "error",
-      isClosable: true,
-    });
   };
 
   const uploadFile = async (file: File): Promise<TApiResponse<TCloudinaryImageRaw>> => {
