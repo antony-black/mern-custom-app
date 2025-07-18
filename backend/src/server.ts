@@ -8,11 +8,12 @@ import { connectDB } from "./config/db";
 
 import router from "./routes/products-router";
 import uploadRouter from "./routes/upload-router";
+import { env } from "./utils/env";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT || 5000;
 
 connectDB();
 

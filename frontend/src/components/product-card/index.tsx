@@ -210,7 +210,6 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
           <ModalHeader>Update Product</ModalHeader>
           <ModalCloseButton />
 
-          {/* Move the form to wrap the entire modal content */}
           <form onSubmit={handleSubmit(onSubmit)}>
             <ModalBody>
               <VStack spacing={4}>
@@ -253,7 +252,6 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
                       await handleUploadFile(file);
                     }}
                   />
-                  {/* Fixed: Use correct error field */}
                   <FormErrorMessage>{errors.image?.message}</FormErrorMessage>
                 </FormControl>
               </VStack>

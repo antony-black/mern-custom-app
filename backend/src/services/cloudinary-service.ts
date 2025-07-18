@@ -1,13 +1,11 @@
 import { v2 as cloudinary, type UploadApiResponse } from "cloudinary";
-import dotenv from "dotenv";
 import { TApiResponse } from "../../../shared/src/types/index";
-
-dotenv.config();
+import { env } from "../utils/env";
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-  api_key: process.env.CLOUDINARY_API_KEY!,
-  api_secret: process.env.CLOUDINARY_API_SECRET!,
+  cloud_name: env.CLOUDINARY_CLOUD_NAME,
+  api_key: env.CLOUDINARY_API_KEY,
+  api_secret: env.CLOUDINARY_API_SECRET,
 });
 
 export const uploadToCloudinaryService = async (filePath: string): Promise<TApiResponse<UploadApiResponse>> => {
