@@ -18,7 +18,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { type SubmitHandler } from "react-hook-form";
 import { PageWrapperComponent } from "../page-wrapper-component";
 import { ProductForm } from "../product-form";
 import type { TProduct, TProductBase } from "@shared/types";
@@ -44,23 +43,8 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
   const textColor = useColorModeValue("gray.600", "gray.200");
   const bg = useColorModeValue("white", "gray.800");
 
-  const onSubmit: SubmitHandler<TProductBase> = async (data) => {
-    await productActionHandler({
-      toast,
-      data: {
-        productId: product._id,
-        updatedData: data,
-      },
-      actionHandler: async ({ productId, updatedData }) => {
-        return updateProduct(productId, updatedData);
-      },
-    });
-
-    onClose();
-  };
-
   const handleDeleteProduct = async () => {
-    await productActionHandler({ actionHandler: deleteProduct, toast, data: product._id });
+    await productActionHandler({ handleProduct: deleteProduct, toast, data: product._id });
   };
 
   return (
@@ -105,7 +89,15 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
           <ModalCloseButton />
 
           <ModalBody>
-            <ProductForm formId="update" initialFormState={initialState} onSubmit={onSubmit} />
+            <ProductForm
+              initialFormState={initialState}
+              action={{
+                type: "update",
+                actionHandler: updateProduct,
+                productId: product._id,
+              }}
+              onSuccess={onClose}
+            />
           </ModalBody>
 
           <ModalFooter>

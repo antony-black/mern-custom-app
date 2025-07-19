@@ -4,15 +4,15 @@ import type { TProductApiResponse } from "@shared/types";
 interface IProductActionHandler<T> {
   data: T;
   toast: (options: UseToastOptions) => void;
-  actionHandler: (data: T) => Promise<TProductApiResponse>;
+  handleProduct: (data: T) => Promise<TProductApiResponse>;
 }
 
 export const productActionHandler = async <T>({
-  actionHandler,
+  handleProduct,
   toast,
   data,
 }: IProductActionHandler<T>): Promise<void> => {
-  const { success, message } = await actionHandler(data);
+  const { success, message } = await handleProduct(data);
 
   toast({
     title: success ? "Success" : "Error",

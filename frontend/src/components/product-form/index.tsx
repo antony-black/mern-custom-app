@@ -12,21 +12,30 @@ import { zProductBaseSchema } from "@shared/types/zod";
 
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { TProductBase } from "@shared/types";
+import type { TProductApiResponse, TProductBase } from "@shared/types";
+import { productActionHandler } from "@/utils/product-action-handler";
 import { handleUploadFile } from "@/utils/upload-file";
 
+type TProductFormAction =
+  | { type: "create"; actionHandler: (data: TProductBase) => Promise<TProductApiResponse> }
+  | {
+      type: "update";
+      actionHandler: (productId: string, updatedData: TProductBase) => Promise<TProductApiResponse>;
+      productId: string;
+    };
+
 type TProductForm = {
-  formId: string;
   initialFormState: TProductBase;
-  onSubmit: SubmitHandler<TProductBase>;
+  action: TProductFormAction;
   shouldReset?: boolean;
+  onSuccess?: () => void;
 };
 
 export const ProductForm: React.FC<TProductForm> = ({
-  formId,
   initialFormState,
-  onSubmit,
+  action,
   shouldReset,
+  onSuccess,
 }) => {
   const {
     register,
@@ -43,16 +52,39 @@ export const ProductForm: React.FC<TProductForm> = ({
 
   const [isUploading, setUploading] = useState<boolean>(false);
 
-  const handleFormSubmit: SubmitHandler<TProductBase> = async (data) => {
-    await onSubmit(data);
+  const onSubmit: SubmitHandler<TProductBase> = async (data) => {
+    try {
+      if (action.type === "create") {
+        await productActionHandler({
+          handleProduct: action.actionHandler,
+          toast,
+          data,
+        });
+      } else {
+        await productActionHandler({
+          toast,
+          data: {
+            productId: action.productId,
+            updatedData: data,
+          },
+          handleProduct: async ({ productId, updatedData }) => {
+            return action.actionHandler(productId, updatedData);
+          },
+        });
 
-    if (shouldReset) {
-      reset();
+        onSuccess?.();
+      }
+
+      if (shouldReset) {
+        reset();
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <VStack spacing={4}>
         <FormControl isInvalid={!!errors.name}>
           <FormLabel>Product Name</FormLabel>
@@ -103,7 +135,7 @@ export const ProductForm: React.FC<TProductForm> = ({
           isLoading={isUploading || isSubmitting}
           disabled={!isValid || isSubmitting}
         >
-          {formId === "create" ? "Submit" : "Update"}
+          {action.type === "create" ? "Submit" : "Update"}
         </Button>
       </VStack>
     </form>
