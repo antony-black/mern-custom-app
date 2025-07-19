@@ -52,6 +52,9 @@ export const ProductForm: React.FC<TProductForm> = ({
 
   const [isUploading, setUploading] = useState<boolean>(false);
 
+  const isLoading = isSubmitting || isUploading;
+  const isEnabled = !isValid || isSubmitting || isUploading;
+
   const onSubmit: SubmitHandler<TProductBase> = async (data) => {
     try {
       if (action.type === "create") {
@@ -132,8 +135,8 @@ export const ProductForm: React.FC<TProductForm> = ({
           type="submit"
           colorScheme="blue"
           w="full"
-          isLoading={isUploading || isSubmitting}
-          disabled={!isValid || isSubmitting}
+          isLoading={isLoading}
+          disabled={isEnabled}
         >
           {action.type === "create" ? "Submit" : "Update"}
         </Button>

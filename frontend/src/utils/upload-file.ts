@@ -13,7 +13,10 @@ interface IHandleUploadFile extends IUploadFile {
   setUploading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const uploadFile = async ({ file, toast }: IUploadFile): Promise<TApiResponse<TCloudinaryImageRaw>> => {
+const uploadFile = async ({
+  file,
+  toast,
+}: IUploadFile): Promise<TApiResponse<TCloudinaryImageRaw>> => {
   const formData = new FormData();
   formData.append("image", file);
 
@@ -54,7 +57,12 @@ const uploadFile = async ({ file, toast }: IUploadFile): Promise<TApiResponse<TC
   }
 };
 
-export const handleUploadFile = async ({ file, toast, setValue, setUploading }: IHandleUploadFile): Promise<void> => {
+export const handleUploadFile = async ({
+  file,
+  toast,
+  setValue,
+  setUploading,
+}: IHandleUploadFile): Promise<void> => {
   try {
     setUploading(true);
 
@@ -71,11 +79,13 @@ export const handleUploadFile = async ({ file, toast, setValue, setUploading }: 
         shouldDirty: true,
       });
     }
+
+    setUploading(false);
   } catch (error) {
     if (error instanceof Error) {
       console.error("Upload error.", error.message);
     }
   } finally {
-    setUploading(false);
+    // setUploading(false);
   }
 };
