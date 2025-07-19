@@ -1,66 +1,111 @@
-import { VStack, Input, Box, Button, useColorModeValue } from "@chakra-ui/react";
-import type { TProductBase, TProduct } from "@shared/types";
-import { productTypeValidation } from "@/utils/product-type-validation";
+import {
+  VStack,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { zProductBaseSchema } from "@shared/types/zod";
 
-type TProductFormProps = {
+import { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { TProductBase } from "@shared/types";
+import { handleUploadFile } from "@/utils/upload-file";
+
+type TProductForm = {
   formId: string;
-  product: TProductBase | TProduct;
-  setProduct: React.Dispatch<React.SetStateAction<TProductBase | TProduct>>;
-  onFileSelect: (file: File) => void;
-  onAddProduct?: () => Promise<void>;
-  isLoading?: boolean;
-  fileInputRef?: React.RefObject<HTMLInputElement | null>;
+  initialFormState: TProductBase;
+  onSubmit: SubmitHandler<TProductBase>;
+  shouldReset?: boolean;
 };
 
-export const ProductForm: React.FC<TProductFormProps> = ({
+export const ProductForm: React.FC<TProductForm> = ({
   formId,
-  product,
-  setProduct,
-  onFileSelect,
-  onAddProduct,
-  isLoading,
-  fileInputRef,
+  initialFormState,
+  onSubmit,
+  shouldReset,
 }) => {
-  const validatedProduct = productTypeValidation(product);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+    setValue,
+    reset,
+  } = useForm<TProductBase>({
+    defaultValues: initialFormState,
+    resolver: zodResolver(zProductBaseSchema),
+  });
+
+  const toast = useToast();
+
+  const [isUploading, setUploading] = useState<boolean>(false);
+
+  const handleFormSubmit: SubmitHandler<TProductBase> = async (data) => {
+    await onSubmit(data);
+
+    if (shouldReset) {
+      reset();
+    }
+  };
 
   return (
-    <Box w={"full"} bg={useColorModeValue("white", "gray.800")} p={6} rounded={"lg"} shadow={"md"}>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <VStack spacing={4}>
-        <Input
-          placeholder="Product Name"
-          name="name"
-          value={validatedProduct.name}
-          onChange={(e) => setProduct({ ...validatedProduct, name: e.target.value })}
-        />
-        <Input
-          placeholder="Price"
-          name="price"
-          type="number"
-          value={validatedProduct.price}
-          onChange={(e) => setProduct({ ...validatedProduct, price: parseFloat(e.target.value) })}
-        />
-        <Input
-          ref={fileInputRef}
-          placeholder="Image"
-          name="image"
-          type="file"
-          accept="image/*"
-          onChange={async (e) => {
-            const file = e.target.files?.[0];
+        <FormControl isInvalid={!!errors.name}>
+          <FormLabel>Product Name</FormLabel>
+          <Input
+            placeholder="Product Name"
+            {...register("name", {
+              required: "Product name is required",
+            })}
+          />
+          <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+        </FormControl>
 
-            if (!file) {
-              return;
-            }
+        <FormControl isInvalid={!!errors.price}>
+          <FormLabel>Price</FormLabel>
+          <Input
+            placeholder="Price"
+            {...register("price", {
+              required: "Price is required",
+              valueAsNumber: true,
+            })}
+          />
+          <FormErrorMessage>{errors.price?.message}</FormErrorMessage>
+        </FormControl>
 
-            await onFileSelect(file);
-          }}
-        />
-        {formId === "create" && (
-          <Button colorScheme="blue" onClick={onAddProduct} w="full" isLoading={isLoading}>
-            Add Product
-          </Button>
-        )}
+        <FormControl isInvalid={!!errors.image}>
+          <FormLabel>Image</FormLabel>
+          <Input
+            name="image"
+            type="file"
+            accept="image/*"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+
+              if (!file) {
+                return;
+              }
+
+              await handleUploadFile({ file, toast, setValue, setUploading });
+            }}
+          />
+          <FormErrorMessage>{errors.image?.message}</FormErrorMessage>
+        </FormControl>
+
+        <Button
+          type="submit"
+          colorScheme="blue"
+          w="full"
+          isLoading={isUploading || isSubmitting}
+          disabled={!isValid || isSubmitting}
+        >
+          {formId === "create" ? "Submit" : "Update"}
+        </Button>
       </VStack>
-    </Box>
+    </form>
   );
 };
