@@ -1,4 +1,4 @@
-import { TDbDoc, TProduct } from "@shared/types";
+import { TDbDoc, TProduct } from "../../../shared/src/types/index";
 
 export const transformDbResponse = (product: TDbDoc): TProduct => {
   const obj = product.toObject?.() || product;

@@ -13,7 +13,15 @@
     "dev-b": "npm run dev --workspace backend",
     "start": "npm start --workspace backend",
     "dev-both": "concurrently \"npm run dev --workspace frontend\" \"npm run dev --workspace backend\"",
-    "build": "npm run build --workspace frontend && npm run build --workspace backend",
+    "build": "tsc -b && npm run build --workspace frontend",
+    "clean": "npm run clean:backend && npm run clean:frontend && npm run clean:shared",
+    "clean:backend": "shx rm -rf backend/dist",
+    "clean:frontend": "shx rm -rf frontend/dist",
+    "clean:shared": "shx rm -rf shared/dist",
+    "clean:frontend-full": "shx rm -rf \"frontend/node_modules/.tmp\"",
+    "clean:all": "npm run clean && npm run clean:frontend-full",
+    "rebuild": "npm run clean && npm run build",
+    "rebuild:frontend": "npm run clean:frontend && npm run build",
     "lint": "npm run lint --workspace frontend && npm run lint --workspace backend",
     "lint-fix": "npm run lint-fix --workspace frontend && npm run lint-fix --workspace backend",
     "prettify": "npm run prettify --workspace frontend && npm run prettify --workspace backend",
@@ -33,6 +41,7 @@
     "nodemon": "^3.1.4",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.5.3",
+    "shx": "^0.4.0",
     "typescript-transform-paths": "^3.5.5"
   }
 }

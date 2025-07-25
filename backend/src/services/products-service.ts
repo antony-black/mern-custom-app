@@ -1,10 +1,4 @@
-import {
-  TApiResponse,
-  TProduct,
-  TProductApiResponse,
-  TProductBase,
-  TProductListApiResponse,
-} from "../../../shared/src/types/index";
+import { TProduct, TProductApiResponse, TProductBase, TProductListApiResponse } from "../../../shared/src/types/index";
 import Product from "../models/product-model";
 import { transformDbResponseList, transformDbResponse } from "../utils/transform-db-response";
 import { removeFromCloudinaryService } from "./cloudinary-service";
