@@ -1,11 +1,6 @@
-import {
-  TApiResponse,
-  TProduct,
-  TProductApiResponse,
-  TProductBase,
-  TProductListApiResponse,
-} from "../../../shared/src/types/index";
+import { TProduct, TProductApiResponse, TProductBase, TProductListApiResponse } from "../../../shared/src/types/index";
 import Product from "../models/product-model";
+import { sendSuccessEmail } from "../utils/email-preparation";
 import { transformDbResponseList, transformDbResponse } from "../utils/transform-db-response";
 import { removeFromCloudinaryService } from "./cloudinary-service";
 
@@ -55,6 +50,8 @@ export const addProductService = async (product: TProductBase): Promise<TProduct
         message: "Incorrect stored product.",
       };
     }
+
+    void sendSuccessEmail();
 
     return {
       success: true,

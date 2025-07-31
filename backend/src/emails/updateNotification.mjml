@@ -1,14 +1,14 @@
 <mjml>
   <mj-head>
-    <mj-title>Success!</mj-title>
+    <mj-title>The product has been updated!</mj-title>
     <mj-include path="./partial/_head.mjml" />
   </mj-head>
   <mj-body mj-class="body">
     <mj-include path="./partial/_header.mjml" />
     <mj-section mj-class="content">
       <mj-column>
-        <mj-text mj-class="h1">Thanks for adding a new product to the store, {{ name }}.</mj-text>
-        <mj-text mj-class="text">You can add more.</mj-text>
+        <mj-text mj-class="h1">You updated the product, {{ name }}.</mj-text>
+        <mj-text mj-class="text">You can add a new one.</mj-text>
         <mj-button mj-class="button" href="{{addUrl}}">Add Product</mj-button>
       </mj-column>
     </mj-section>

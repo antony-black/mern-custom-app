@@ -12,6 +12,7 @@ const zEnvSchema = z.object({
   CLOUDINARY_API_KEY: zNonEmptyTrimmedSchema,
   CLOUDINARY_API_SECRET: zNonEmptyTrimmedSchema,
   CLOUDINARY_CLOUD_NAME: zNonEmptyTrimmedSchema,
+  WEBAPP_URL: zNonEmptyTrimmedSchema,
 });
 
 export const env = zEnvSchema.parse(process.env);
