@@ -27,7 +27,7 @@ const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
-
+console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
 if (process.env.NODE_ENV === "production") {
   const distPath = path.resolve(__dirname, "../frontend/dist");
 

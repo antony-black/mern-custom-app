@@ -2,36 +2,38 @@ import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import fg from "fast-glob";
+import Handlebars from "handlebars";
 import _ from "lodash";
-import { env } from "./env";
+import { sendEmailThroughBrevo } from "../services/brevo-service";
+import { getBaseAppUrl } from "./env";
 
+const BASE_APP_URL = getBaseAppUrl();
+console.log("BASE_APP_URL:", BASE_APP_URL);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const getHtmlTemplates = _.memoize(async () => {
-  // const htmlPathsPattern = path.resolve(__dirname, "../emails/dist/**/*.html");
+const getHbrTemplates = _.memoize(async () => {
   const distDir = path.resolve(__dirname, "../emails/dist");
   const htmlPathsPattern = path.join(distDir, "*.html").replace(/\\/g, "/");
 
-  console.log("HERE >>>> htmlPathsPattern:", htmlPathsPattern);
   const htmlPaths = fg.sync(htmlPathsPattern);
-  console.log("HERE >>>> htmlPaths:", htmlPaths);
-  const htmlTemplates: Record<string, string> = {};
+  const hbrTemplates: Record<string, HandlebarsTemplateDelegate> = {};
+
   for (const htmlPath of htmlPaths) {
     const templateName = path.basename(htmlPath, ".html");
-    console.log("HERE >>>> templateName:", templateName);
-    htmlTemplates[templateName] = await fs.readFile(htmlPath, "utf8");
-    console.log("HERE >>>> htmlTemplates[templateName]:", htmlTemplates[templateName]);
+    const htmlTemplate = await fs.readFile(htmlPath, "utf8");
+    hbrTemplates[templateName] = Handlebars.compile(htmlTemplate);
   }
-  console.log("HERE >>>> htmlTemplates:", htmlTemplates);
-  return htmlTemplates;
+
+  return hbrTemplates;
 });
 
-const getHtmlTemplate = async (templateName: string) => {
-  const htmlTemplates = await getHtmlTemplates();
-  console.log("HERE >>>> htmlTemplates:", htmlTemplates);
-  console.log("HERE >>>> htmlTemplates[templateName]:", htmlTemplates[templateName]);
-  return htmlTemplates[templateName];
+const getEmailHtml = async (templateName: string, templateVariables: Record<string, string> = {}) => {
+  const hbrTemplates = await getHbrTemplates();
+  const hbrTemplate = hbrTemplates[templateName];
+  const html = hbrTemplate(templateVariables);
+
+  return html;
 };
 
 const sendEmail = async ({
@@ -46,23 +48,24 @@ const sendEmail = async ({
   templateVariables?: Record<string, any>;
 }) => {
   try {
-    const htmlTemplate = await getHtmlTemplate(templateName);
-    console.log("HERE >>>> htmlTemplate:", htmlTemplate);
     const fullTemplateVaraibles = {
       ...templateVariables,
-      homeUrl: env.WEBAPP_URL,
+      homeUrl: BASE_APP_URL,
     };
-    console.log("HERE >>>> fullTemplateVaraibles:", fullTemplateVaraibles);
+    const html = await getEmailHtml(templateName, fullTemplateVaraibles);
+    const { loggableResponse } = await sendEmailThroughBrevo({ to, html, subject });
+
     console.info("sendEmail", {
       to,
       subject,
       templateName,
       fullTemplateVaraibles,
-      htmlTemplate,
+      response: loggableResponse,
     });
     return { ok: true };
   } catch (error) {
     console.error(error);
+
     return { ok: false };
   }
 };
@@ -70,12 +73,12 @@ const sendEmail = async ({
 // export const sendSuccessEmail = async ({ user }: { user: Pick<User, "nick" | "email"> }) => {
 export const sendSuccessEmail = async () => {
   return await sendEmail({
-    to: "designapp79@gmail.com",
+    to: "merncustomapp@gmail.com",
     subject: "Thanks For Adding a new product!",
-    templateName: "success",
+    templateName: "successNotification",
     templateVariables: {
-      name: "Makar",
-      addUrl: `${env.WEBAPP_URL}/create`,
+      name: "New Product",
+      addUrl: `${BASE_APP_URL}/create`,
     },
   });
 };
