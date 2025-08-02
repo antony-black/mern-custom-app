@@ -5,10 +5,16 @@ import fg from "fast-glob";
 import Handlebars from "handlebars";
 import _ from "lodash";
 import { sendEmailThroughBrevo } from "../services/brevo-service";
+import { logger } from "../services/logger-service";
 import { getBaseAppUrl } from "./env";
 
 const BASE_APP_URL = getBaseAppUrl();
-console.log("BASE_APP_URL:", BASE_APP_URL);
+logger.info({
+  logType: "email",
+  message: "BASE_APP_URL",
+  logData: { BASE_APP_URL },
+});
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -55,16 +61,30 @@ const sendEmail = async ({
     const html = await getEmailHtml(templateName, fullTemplateVaraibles);
     const { loggableResponse } = await sendEmailThroughBrevo({ to, html, subject });
 
-    console.info("sendEmail", {
-      to,
-      subject,
-      templateName,
-      fullTemplateVaraibles,
-      response: loggableResponse,
+    logger.info({
+      logType: "email",
+      message: "sendEmail",
+      logData: {
+        to,
+        subject,
+        templateName,
+        fullTemplateVaraibles,
+        response: loggableResponse,
+      },
     });
+
     return { ok: true };
   } catch (error) {
-    console.error(error);
+    logger.error({
+      logType: "email",
+      error,
+      logData: {
+        to,
+        subject,
+        templateName,
+        templateVariables,
+      },
+    });
 
     return { ok: false };
   }

@@ -7,6 +7,7 @@ dotenv.config();
 const zNonEmptyTrimmedSchema = z.string().trim().min(1, { message: "There is no ENV key." });
 
 const zEnvSchema = z.object({
+  HOST_ENV: zNonEmptyTrimmedSchema,
   PORT: zNonEmptyTrimmedSchema,
   MONGO_URI: zNonEmptyTrimmedSchema,
   CLOUDINARY_API_KEY: zNonEmptyTrimmedSchema,
@@ -27,6 +28,6 @@ export const getBaseAppUrl = (): string => {
   if (isProduction && !env.SERVER_URL) {
     throw new Error("❌ SERVER_URL must be defined in production.");
   }
-  console.log("process.env.NODE_ENV-2:", process.env.NODE_ENV);
+
   return isProduction ? env.SERVER_URL : env.WEBAPP_URL;
 };

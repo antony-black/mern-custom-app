@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { logger } from "../services/logger-service";
 import { env } from "../utils/env";
 
 export const connectDB = async () => {
@@ -7,14 +8,17 @@ export const connectDB = async () => {
   }
 
   try {
-    const conn = await mongoose.connect(env.MONGO_URI);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    await mongoose.connect(env.MONGO_URI);
+    logger.info({
+      logType: "db",
+      message: "MongoDB Connected.",
+    });
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(`Error: ${error.message}`);
-    } else {
-      console.error("Unknown error during DB connection:", error);
-    }
+    logger.error({
+      logType: "db",
+      error: new Error("Connection failed"),
+    });
+
     process.exit(1); // process code 1 code means exit with failure, 0 means success
   }
 };

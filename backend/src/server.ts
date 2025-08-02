@@ -8,6 +8,7 @@ import { connectDB } from "./config/db";
 
 import router from "./routes/products-router";
 import uploadRouter from "./routes/upload-router";
+import { logger } from "./services/logger-service";
 import { env } from "./utils/env";
 
 dotenv.config();
@@ -27,7 +28,13 @@ const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
-console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
+
+logger.info({
+  logType: "server",
+  message: "App started.",
+  logData: { port: PORT, env: process.env.NODE_ENV },
+});
+
 if (process.env.NODE_ENV === "production") {
   const distPath = path.resolve(__dirname, "../frontend/dist");
 
@@ -38,6 +45,9 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.listen(PORT, async () => {
-  console.log(`Running on ${process.env.PORT}`);
+  logger.info({
+    logType: "server",
+    message: `Running on ${process.env.PORT}`,
+  });
 });
 // uSLCRsVaQQ49Hh1t
