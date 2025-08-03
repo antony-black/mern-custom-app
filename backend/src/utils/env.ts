@@ -8,6 +8,7 @@ const zNonEmptyTrimmedSchema = z.string().trim().min(1, { message: "There is no 
 
 const zEnvSchema = z.object({
   HOST_ENV: zNonEmptyTrimmedSchema,
+  NODE_ENV: zNonEmptyTrimmedSchema,
   PORT: zNonEmptyTrimmedSchema,
   MONGO_URI: zNonEmptyTrimmedSchema,
   CLOUDINARY_API_KEY: zNonEmptyTrimmedSchema,

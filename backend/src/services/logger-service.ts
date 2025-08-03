@@ -14,7 +14,7 @@ export const winstonLogger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json(),
   ),
-  defaultMeta: { service: "backend", hostEnv: env.HOST_ENV },
+  defaultMeta: { service: "backend", nodeEnv: env.NODE_ENV },
   transports: [
     new winston.transports.Console({
       format: winston.format((logData) => {
@@ -23,9 +23,10 @@ export const winstonLogger = winston.createLogger({
             info: (str: string) => pc.blue(str),
             error: (str: string) => pc.red(str),
             debug: (str: string) => pc.cyan(str),
-          }[logData.level as "info" | "error" | "debug"] ?? ((str: string) => str);
+            http: (str: string) => pc.magenta(str),
+          }[logData.level as "info" | "error" | "debug" | "http"] ?? ((str: string) => str);
 
-        const levelAndType = `${logData.level} ${logData.logType ?? ""}`;
+        const levelAndType = `[${logData.level.toUpperCase()}] ${logData.logType ?? ""}`;
         const mainMessage = `${setColor(levelAndType)} ${pc.green(logData.timestamp as string)}${EOL}${logData.message}`;
 
         const visibleMessageTags = _.omit(logData, ["level", "logType", "timestamp", "message", "service", "hostEnv"]);
@@ -47,21 +48,29 @@ export const winstonLogger = winston.createLogger({
   ],
 });
 
-type TLogger = {
+type TLoggerBase = {
   logType: string;
   logData?: Record<string, any>;
 };
 
-type TLoggerInfo = TLogger & {
+type TLoggerInfo = TLoggerBase & {
   message: string;
 };
 
-type TLoggerError = TLogger & {
+type TLoggerError = TLoggerBase & {
   error: any;
 };
 
 export const logger = {
   info: ({ logType, message, logData }: TLoggerInfo) => {
+    winstonLogger.info({
+      logType,
+      message,
+      logData: logData ?? {},
+    });
+  },
+
+  http: ({ logType, message, logData }: TLoggerInfo) => {
     winstonLogger.info({
       logType,
       message,

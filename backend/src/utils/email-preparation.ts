@@ -11,8 +11,8 @@ import { getBaseAppUrl } from "./env";
 const BASE_APP_URL = getBaseAppUrl();
 logger.info({
   logType: "email",
-  message: "BASE_APP_URL",
-  logData: { BASE_APP_URL },
+  message: "HOST",
+  logData: { host: BASE_APP_URL },
 });
 
 const __filename = fileURLToPath(import.meta.url);
