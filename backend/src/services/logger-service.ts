@@ -14,7 +14,7 @@ export const winstonLogger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json(),
   ),
-  defaultMeta: { service: "backend", nodeEnv: env.NODE_ENV },
+  defaultMeta: { service: "backend", environment: env.NODE_ENV },
   transports: [
     new winston.transports.Console({
       format: winston.format((logData) => {

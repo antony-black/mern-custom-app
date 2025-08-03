@@ -7,7 +7,6 @@ dotenv.config();
 const zNonEmptyTrimmedSchema = z.string().trim().min(1, { message: "There is no ENV key." });
 
 const zEnvSchema = z.object({
-  HOST_ENV: zNonEmptyTrimmedSchema,
   NODE_ENV: zNonEmptyTrimmedSchema,
   PORT: zNonEmptyTrimmedSchema,
   MONGO_URI: zNonEmptyTrimmedSchema,
