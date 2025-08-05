@@ -1,11 +1,10 @@
 import { Container, SimpleGrid, Text, VStack, Spinner, Box } from "@chakra-ui/react";
+import { PageWrapperComponent } from "components/page-wrapper-component";
+import { ProductCard } from "components/product-card";
 import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { Link } from "react-router-dom";
-
-import { PageWrapperComponent } from "@/components/page-wrapper-component";
-import { ProductCard } from "@/components/product-card";
-import { useProductStore } from "@/store";
+import { useProductStore } from "store/index";
 
 export const HomePage: React.FC = () => {
   const { fetchProducts, loadMoreProducts, hasMore, products } = useProductStore();
@@ -16,7 +15,10 @@ export const HomePage: React.FC = () => {
 
   return (
     <Container maxW="container.xl" py={12}>
-      <PageWrapperComponent title="Product Store" content="Buy the best products at Product Store!" />
+      <PageWrapperComponent
+        title="Product Store"
+        content="Buy the best products at Product Store!"
+      />
 
       <VStack spacing={8}>
         <Text
@@ -52,7 +54,8 @@ export const HomePage: React.FC = () => {
             spacing={10}
             w={"full"}
           >
-            {!!products.length && products.map((product) => <ProductCard key={product._id} product={product} />)}
+            {!!products.length &&
+              products.map((product) => <ProductCard key={product._id} product={product} />)}
           </SimpleGrid>
         </InfiniteScroll>
 

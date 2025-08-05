@@ -1,7 +1,7 @@
-import type { TCloudinaryImageRaw } from "@/types/cloudinary-type";
 import type { UseToastOptions } from "@chakra-ui/react";
 import type { TApiResponse, TProductBase } from "@shared/types";
 import type { UseFormSetValue } from "react-hook-form";
+import type { TCloudinaryImageRaw } from "types/cloudinary-type";
 
 interface IUploadFile {
   file: File;

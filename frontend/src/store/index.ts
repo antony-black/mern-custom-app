@@ -1,6 +1,15 @@
-import { zProductBaseSchema, zProductResponseSchema, zProductListResponseSchema } from "@shared/types/zod";
+import {
+  zProductBaseSchema,
+  zProductResponseSchema,
+  zProductListResponseSchema,
+} from "@shared/types/zod";
 import { create } from "zustand";
-import type { TProduct, TProductBase, TProductApiResponse, TProductListApiResponse } from "@shared/types";
+import type {
+  TProduct,
+  TProductBase,
+  TProductApiResponse,
+  TProductListApiResponse,
+} from "@shared/types";
 
 type ProductStore = {
   products: TProduct[];
@@ -26,7 +35,10 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     console.log("newProduct:", newProduct);
     const isValidInput = zProductBaseSchema.safeParse(newProduct);
     if (!isValidInput.success) {
-      return { success: isValidInput.success, message: isValidInput.error.message ?? "Please fill in all fields." };
+      return {
+        success: isValidInput.success,
+        message: isValidInput.error.message ?? "Please fill in all fields.",
+      };
     }
 
     const apiResponse = await fetch("/api/products", {
@@ -62,7 +74,10 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     const isValidApiResponse = zProductListResponseSchema.safeParse(productsData);
     console.log("isValidApiResponse:", isValidApiResponse);
     if (!isValidApiResponse.success) {
-      return { success: isValidApiResponse.success, message: isValidApiResponse.error.message ?? "Have no products." };
+      return {
+        success: isValidApiResponse.success,
+        message: isValidApiResponse.error.message ?? "Have no products.",
+      };
     }
 
     const { success, message, data } = productsData;
@@ -82,11 +97,16 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     const isValidApiResponse = zProductListResponseSchema.safeParse(productsData);
     console.log("isValidApiResponse:", isValidApiResponse);
     if (!isValidApiResponse.success) {
-      return { success: isValidApiResponse.success, message: isValidApiResponse.error.message ?? "Have no products." };
+      return {
+        success: isValidApiResponse.success,
+        message: isValidApiResponse.error.message ?? "Have no products.",
+      };
     }
     const nextProductsPart: TProduct[] = productsData.data ?? [];
 
-    const newProducts = nextProductsPart.filter((newProd) => !products.some((prod) => prod._id === newProd._id));
+    const newProducts = nextProductsPart.filter(
+      (newProd) => !products.some((prod) => prod._id === newProd._id),
+    );
 
     set({
       products: [...products, ...newProducts],
@@ -109,7 +129,9 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     if (!isValidApiResponse.success) {
       return {
         success: isValidApiResponse.success,
-        message: isValidApiResponse.error.message ?? `Failed during remove the product with id ${productId}`,
+        message:
+          isValidApiResponse.error.message ??
+          `Failed during remove the product with id ${productId}`,
       };
     }
 
@@ -127,7 +149,10 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   updateProduct: async (productId, updatedProduct) => {
     const isValidInput = zProductBaseSchema.safeParse(updatedProduct);
     if (!isValidInput.success) {
-      return { success: isValidInput.success, message: isValidInput.error.message ?? "Please fill in all fields." };
+      return {
+        success: isValidInput.success,
+        message: isValidInput.error.message ?? "Please fill in all fields.",
+      };
     }
 
     const apiResponse = await fetch(`/api/products/${productId}`, {

@@ -7,7 +7,7 @@
     "strict": true,
     "composite": true,
     "outDir": "dist",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "moduleResolution": "node",
     "skipLibCheck": true
   },

@@ -1,8 +1,8 @@
 import { Box, Container, Heading, useColorModeValue, VStack } from "@chakra-ui/react";
+import { PageWrapperComponent } from "components/page-wrapper-component";
+import { ProductForm } from "components/product-form";
+import { useProductStore } from "store/index";
 import type { TProductBase } from "@shared/types";
-import { PageWrapperComponent } from "@/components/page-wrapper-component";
-import { ProductForm } from "@/components/product-form";
-import { useProductStore } from "@/store";
 
 const initialFormState = {
   name: "",

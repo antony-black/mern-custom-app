@@ -1,9 +1,9 @@
 import { PlusSquareIcon } from "@chakra-ui/icons";
 import { Button, Container, Flex, HStack, Text, useColorMode } from "@chakra-ui/react";
+import Logo from "assets/images/logo.svg?react";
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
 import { Link } from "react-router-dom";
-import Logo from "@/assets/images/logo.svg?react";
 
 export const Navbar: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -38,7 +38,9 @@ export const Navbar: React.FC = () => {
               <PlusSquareIcon fontSize={20} />
             </Button>
           </Link>
-          <Button onClick={toggleColorMode}>{colorMode === "light" ? <IoMoon /> : <LuSun size="20" />}</Button>
+          <Button onClick={toggleColorMode}>
+            {colorMode === "light" ? <IoMoon /> : <LuSun size="20" />}
+          </Button>
         </HStack>
       </Flex>
     </Container>

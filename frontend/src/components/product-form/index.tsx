@@ -12,9 +12,9 @@ import { zProductBaseSchema } from "@shared/types/zod";
 
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { productActionHandler } from "utils/product-action-handler";
+import { handleUploadFile } from "utils/upload-file";
 import type { TProductApiResponse, TProductBase } from "@shared/types";
-import { productActionHandler } from "@/utils/product-action-handler";
-import { handleUploadFile } from "@/utils/upload-file";
 
 type TProductFormAction =
   | { type: "create"; actionHandler: (data: TProductBase) => Promise<TProductApiResponse> }

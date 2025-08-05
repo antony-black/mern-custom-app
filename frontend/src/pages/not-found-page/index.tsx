@@ -1,6 +1,6 @@
+import { ErrorPageComponent } from "components/error-page-component";
+import { PageWrapperComponent } from "components/page-wrapper-component";
 import image404 from "../../assets/images/404-not-found.png";
-import { ErrorPageComponent } from "@/components/error-page-component";
-import { PageWrapperComponent } from "@/components/page-wrapper-component";
 
 type TNotFoundPage = {
   title?: string;
