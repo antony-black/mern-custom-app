@@ -8,12 +8,9 @@
     "shared"
   ],
   "scripts": {
-    "dev": "concurrently \"npm:dev:*\"",
-    "dev-f": "npm run dev --workspace frontend",
-    "dev-b": "npm run dev --workspace backend",
-    "start": "npm start --workspace backend",
-    "dev-both": "concurrently \"npm run dev --workspace frontend\" \"npm run dev --workspace backend\"",
+    "dev": "concurrently \"npm run dev --workspace frontend\" \"npm run dev --workspace backend\"",
     "build": "npm run build --workspace frontend && npm run build --workspace backend",
+    "start": "npm start --workspace backend",
     "lint": "npm run lint --workspace frontend && npm run lint --workspace backend",
     "lint-fix": "npm run lint-fix --workspace frontend && npm run lint-fix --workspace backend",
     "prettify": "npm run prettify --workspace frontend && npm run prettify --workspace backend",

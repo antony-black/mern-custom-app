@@ -41,7 +41,6 @@ export default defineConfig(({ mode }) => {
         types: "/src/types",
         utils: "/src/utils",
         "@shared": path.resolve(__dirname, "../shared/src"),
-        // shared: "../shared/src",
       },
     },
   };
