@@ -17,6 +17,7 @@ const levelColors: Record<string, string> = {
 logger.methodFactory = (methodName, logLevel, loggerName) => {
   const rawMethod = originalFactory(methodName, logLevel, loggerName);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (...args: any[]) => {
     const timestamp = new Date().toISOString();
     const tag = typeof loggerName === "string" ? `${loggerName.toUpperCase()}` : "";
