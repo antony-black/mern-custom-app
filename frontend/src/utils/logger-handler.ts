@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import logger from "loglevel";
+import { addGroupMethods } from "./add-logger-group";
 
 const isDev = process.env.NODE_ENV !== "production";
 console.log(`Logger initialized in ${isDev ? "development" : "production"} mode.`);
@@ -33,9 +33,11 @@ logger.setDefaultLevel(logger.getLevel());
 
 // logger.setLevel(logger.levels.DEBUG); // Adjust globally if needed
 
-export const appLogger = logger.getLogger("app");
-export const authLogger = logger.getLogger("auth");
-export const storeLogger = logger.getLogger("store");
+addGroupMethods(logger);
+
+export const appLogger = addGroupMethods(logger.getLogger("app"));
+export const authLogger = addGroupMethods(logger.getLogger("auth"));
+export const storeLogger = addGroupMethods(logger.getLogger("store"));
 
 appLogger.setLevel(isDev ? "debug" : "warn");
 authLogger.setLevel(isDev ? "info" : "error");

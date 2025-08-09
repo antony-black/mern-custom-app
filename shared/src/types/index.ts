@@ -20,6 +20,8 @@ export type TApiResponse<T> = {
   data?: T;
 };
 
+export type TValidator<T> = (data: T) => { success: boolean; message?: string };
+
 type TDbDocSchema = z.infer<typeof zDbDocSchema>;
 
 export type TDbDoc = Document & TProductBase & TDbDocSchema;
