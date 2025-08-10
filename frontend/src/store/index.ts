@@ -71,6 +71,8 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     const { page, products, hasMore } = get();
     if (!hasMore) {
       storeLogger.debug("No more products to load");
+      storeLogger.groupEnd();
+
       return { success: false, message: "No more products to load." };
     }
 

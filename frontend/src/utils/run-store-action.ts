@@ -29,7 +29,10 @@ export async function runStoreAction<
   onDelete,
 }: TRunStoreAction<Input, OutputData, Output>) {
   const start = performance.now();
-  storeLogger.groupCollapsed(label);
+  storeLogger.groupCollapsed(
+    `%c${label}`,
+    "background: purple; color: white; font-weight: bold; padding: 2px 6px; border-radius: 4px;",
+  );
 
   if (inputData && inputValidator) {
     const isValidInput = inputValidator(inputData);
