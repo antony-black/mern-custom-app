@@ -3,6 +3,7 @@ import {
   zProductResponseSchema,
   zProductListResponseSchema,
 } from "@shared/types/zod";
+import { createZodValidator } from "utils/create-zod-validator";
 import { storeLogger } from "utils/logger-handler";
 import { runStoreAction } from "utils/run-store-action";
 import { create } from "zustand";
@@ -39,7 +40,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     return runStoreAction<TProductBase, TProduct, TProductApiResponse>({
       label: "create-product",
       inputData: newProduct,
-      inputValidator: (input) => zProductBaseSchema.safeParse(input),
+      inputValidator: createZodValidator(zProductBaseSchema),
       action: async (data) => {
         return await fetch("/api/products", {
           method: "POST",
@@ -47,7 +48,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
           body: JSON.stringify(data),
         });
       },
-      responseValidator: (responseAPI) => zProductResponseSchema.safeParse(responseAPI),
+      responseValidator: createZodValidator(zProductResponseSchema),
       onSuccess: async (product) => {
         set((state) => ({
           products: [...state.products, product],
@@ -60,7 +61,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     return runStoreAction<undefined, TProduct[], TProductListApiResponse>({
       label: "fetch-products",
       action: async () => await fetch(`/api/products?page=1&limit=6`),
-      responseValidator: (productsData) => zProductListResponseSchema.safeParse(productsData),
+      responseValidator: createZodValidator(zProductListResponseSchema),
       onSuccess: async (data) => {
         set({ products: data, page: 2, hasMore: data.length === 6 });
       },
@@ -79,7 +80,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     return runStoreAction<number, TProduct[], TProductListApiResponse>({
       label: "load-more-products",
       action: async () => await fetch(`/api/products?page=${page}&limit=6`),
-      responseValidator: (productsData) => zProductListResponseSchema.safeParse(productsData),
+      responseValidator: createZodValidator(zProductListResponseSchema),
       onSuccess: async (nextProductsPart) => {
         const newProducts = nextProductsPart.filter(
           (newProd) => !products.some((prod) => prod._id === newProd._id),
@@ -106,7 +107,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
           method: "DELETE",
         });
       },
-      responseValidator: (removeData) => zProductResponseSchema.safeParse(removeData),
+      responseValidator: createZodValidator(zProductResponseSchema),
       onDelete: async () => {
         set((state) => ({
           products: state.products.filter((product) => product._id !== productId),
@@ -119,14 +120,14 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     return runStoreAction<TProductBase, TProduct, TProductApiResponse>({
       label: "update-product",
       inputData: updatedProduct,
-      inputValidator: (updatedProduct) => zProductBaseSchema.safeParse(updatedProduct),
+      inputValidator: createZodValidator(zProductBaseSchema),
       action: async (updatedProduct) =>
         fetch(`/api/products/${productId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedProduct),
         }),
-      responseValidator: (product) => zProductResponseSchema.safeParse(product),
+      responseValidator: createZodValidator(zProductResponseSchema),
       onSuccess: async (data) => {
         set((state) => ({
           products: state.products.map((product) => (product._id === productId ? data : product)),
