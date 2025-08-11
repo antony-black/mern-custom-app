@@ -5,12 +5,16 @@ import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { Link } from "react-router-dom";
 import { useProductStore } from "store/index";
+import { homePageLogger } from "utils/logger/logger-handler";
 
 export const HomePage: React.FC = () => {
   const { fetchProducts, loadMoreProducts, hasMore, products } = useProductStore();
 
   useEffect(() => {
-    fetchProducts();
+    homePageLogger.info("Fetching initial products");
+    fetchProducts()
+      .then(() => homePageLogger.info("Products loaded"))
+      .catch((error) => homePageLogger.error("Failed to fetch products", error));
   }, [fetchProducts]);
 
   return (

@@ -41,10 +41,12 @@ export const authLogger = addGroupMethods(logger.getLogger("auth"));
 export const storeLogger = addGroupMethods(logger.getLogger("store"));
 export const cloudinaryLogger = addGroupMethods(logger.getLogger("cloudinary"));
 export const formLogger = addGroupMethods(logger.getLogger("form"));
+export const homePageLogger = addGroupMethods(logger.getLogger("home-page"));
 
 appLogger.setLevel(isDev ? "debug" : "warn");
 authLogger.setLevel(isDev ? "info" : "error");
 storeLogger.setLevel(isDev ? "debug" : "info");
+homePageLogger.setLevel(isDev ? "debug" : "info");
 cloudinaryLogger.setLevel(isDev ? "debug" : "info");
 formLogger.setLevel(isDev ? "info" : "error");
 
