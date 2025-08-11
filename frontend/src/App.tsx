@@ -4,8 +4,11 @@ import { CreatePage } from "pages/create-page";
 import { HomePage } from "pages/home-page";
 import { NotFoundPage } from "pages/not-found-page";
 import { Route, Routes } from "react-router-dom";
+import { appLogger } from "utils/logger/logger-handler";
 
 function App() {
+  appLogger.info("Rendering application");
+
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
       <Navbar />

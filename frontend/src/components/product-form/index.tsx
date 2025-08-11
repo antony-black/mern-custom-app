@@ -12,7 +12,7 @@ import { zProductBaseSchema } from "@shared/types/zod";
 
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { formLogger } from "utils/logger-handler";
+import { formLogger } from "utils/logger/logger-handler";
 import { productActionHandler } from "utils/product-action-handler";
 import { handleUploadFile } from "utils/upload-file";
 import type { TProductApiResponse, TProductBase } from "@shared/types";

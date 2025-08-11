@@ -4,7 +4,7 @@ import {
   zProductListResponseSchema,
 } from "@shared/types/zod";
 import { createZodValidator } from "utils/create-zod-validator";
-import { storeLogger } from "utils/logger-handler";
+import { storeLogger } from "utils/logger/logger-handler";
 import { runStoreAction } from "utils/run-store-action";
 import { create } from "zustand";
 import type {

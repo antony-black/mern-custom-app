@@ -4,9 +4,11 @@ import Logo from "assets/images/logo.svg?react";
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
 import { Link } from "react-router-dom";
+import logger from "utils/logger/logger-handler";
 
 export const Navbar: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  logger.debug("Rendering navbar, current color mode:", colorMode);
 
   return (
     <Container maxW={"100%"} px={4}>

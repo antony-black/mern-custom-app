@@ -1,4 +1,4 @@
-import { cloudinaryLogger } from "./logger-handler";
+import { cloudinaryLogger } from "./logger/logger-handler";
 // import type { UseToastOptions } from "@chakra-ui/react";
 import type { TApiResponse, TProductBase } from "@shared/types";
 import type { UseFormSetValue } from "react-hook-form";
