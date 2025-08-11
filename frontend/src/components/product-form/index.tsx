@@ -12,6 +12,7 @@ import { zProductBaseSchema } from "@shared/types/zod";
 
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { formLogger } from "utils/logger-handler";
 import { productActionHandler } from "utils/product-action-handler";
 import { handleUploadFile } from "utils/upload-file";
 import type { TProductApiResponse, TProductBase } from "@shared/types";
@@ -125,7 +126,12 @@ export const ProductForm: React.FC<TProductForm> = ({
                 return;
               }
 
-              await handleUploadFile({ file, toast, setValue, setUploading });
+              formLogger.info("User selected file:", file.name);
+
+              // await handleUploadFile({ file, toast, setValue, setUploading });
+              await handleUploadFile({ file, setValue, setUploading });
+
+              formLogger.info("Upload process returned to form.");
             }}
           />
           <FormErrorMessage>{errors.image?.message}</FormErrorMessage>

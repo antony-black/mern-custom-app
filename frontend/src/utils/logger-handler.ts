@@ -14,7 +14,8 @@ const levelColors: Record<string, string> = {
   warn: `background: #f39c12; color: white`, // orange
   error: `background: #e74c3c; color: white`, // red
 };
-
+// TODO: refactore all utils, srvices etc.
+//TODO: implemets logger with components and pages
 logger.methodFactory = (methodName, logLevel, loggerName) => {
   const rawMethod = originalFactory(methodName, logLevel, loggerName);
 
@@ -38,10 +39,14 @@ addGroupMethods(logger);
 export const appLogger = addGroupMethods(logger.getLogger("app"));
 export const authLogger = addGroupMethods(logger.getLogger("auth"));
 export const storeLogger = addGroupMethods(logger.getLogger("store"));
+export const cloudinaryLogger = addGroupMethods(logger.getLogger("cloudinary"));
+export const formLogger = addGroupMethods(logger.getLogger("form"));
 
 appLogger.setLevel(isDev ? "debug" : "warn");
 authLogger.setLevel(isDev ? "info" : "error");
 storeLogger.setLevel(isDev ? "debug" : "info");
+cloudinaryLogger.setLevel(isDev ? "debug" : "info");
+formLogger.setLevel(isDev ? "info" : "error");
 
 export const createLogger = (name: string) => logger.getLogger(name);
 export default logger;
