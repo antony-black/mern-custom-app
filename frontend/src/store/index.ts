@@ -4,7 +4,8 @@ import {
   zProductListResponseSchema,
 } from "@shared/types/zod";
 import { createZodValidator } from "utils/create-zod-validator";
-import { getProducts } from "utils/fetch-products";
+import { getProducts } from "utils/get-products";
+import { handleProduct } from "utils/handle-product";
 import { storeLogger } from "utils/logger/logger-handler";
 import { runStoreAction } from "utils/run-store-action";
 import { create } from "zustand";
@@ -42,13 +43,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
       label: "create-product",
       inputData: newProduct,
       inputValidator: createZodValidator(zProductBaseSchema),
-      action: async (data) => {
-        return await fetch("/api/products", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-      },
+      action: async (data) => await handleProduct({ method: "POST", data }),
       responseValidator: createZodValidator(zProductResponseSchema),
       onSuccess: async (product) => {
         set((state) => ({
@@ -62,7 +57,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     return runStoreAction<undefined, TProduct[], TProductListApiResponse>({
       label: "fetch-products",
       responseValidator: createZodValidator(zProductListResponseSchema),
-      action: async () => getProducts(),
+      action: async () => await getProducts(),
       onSuccess: async (data) => {
         set({ products: data, page: 2, hasMore: data.length === 6 });
       },
@@ -103,11 +98,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     >({
       label: "delete-product",
       inputData: productId,
-      action: (id) => {
-        return fetch(`/api/products/${id}`, {
-          method: "DELETE",
-        });
-      },
+      action: (id) => handleProduct({ method: "DELETE", productId: id }),
       responseValidator: createZodValidator(zProductResponseSchema),
       onDelete: async () => {
         set((state) => ({
@@ -122,12 +113,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
       label: "update-product",
       inputData: updatedProduct,
       inputValidator: createZodValidator(zProductBaseSchema),
-      action: async (updatedProduct) =>
-        fetch(`/api/products/${productId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedProduct),
-        }),
+      action: async (data) => await handleProduct({ method: "PUT", productId, data }),
       responseValidator: createZodValidator(zProductResponseSchema),
       onSuccess: async (data) => {
         set((state) => ({

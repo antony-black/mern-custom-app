@@ -5,13 +5,13 @@ import { logger } from "./logger-service";
 export const applyCron = () => {
   logger.info({
     logType: "cron",
-    message: `Initializing cron job with schedule: "* * * * *"`,
+    message: `Initializing cron job with schedule: "*/5 * * * *"`,
     logData: { timezone: Intl.DateTimeFormat().resolvedOptions().timeZone },
   });
 
   new CronJob(
-    // "*/5 * * * *", // every 5 minutes
-    "* * * * *", // every minute
+    "*/5 * * * *", // every 5 minutes
+    // "* * * * *", // every minute
     // "* * * * * *", // every second
     async () => {
       const start = Date.now();
