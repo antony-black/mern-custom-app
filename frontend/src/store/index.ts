@@ -4,6 +4,7 @@ import {
   zProductListResponseSchema,
 } from "@shared/types/zod";
 import { createZodValidator } from "utils/create-zod-validator";
+import { getProducts } from "utils/fetch-products";
 import { storeLogger } from "utils/logger/logger-handler";
 import { runStoreAction } from "utils/run-store-action";
 import { create } from "zustand";
@@ -60,8 +61,8 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   fetchProducts: async () => {
     return runStoreAction<undefined, TProduct[], TProductListApiResponse>({
       label: "fetch-products",
-      action: async () => await fetch(`/api/products?page=1&limit=6`),
       responseValidator: createZodValidator(zProductListResponseSchema),
+      action: async () => getProducts(),
       onSuccess: async (data) => {
         set({ products: data, page: 2, hasMore: data.length === 6 });
       },
@@ -79,7 +80,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
 
     return runStoreAction<number, TProduct[], TProductListApiResponse>({
       label: "load-more-products",
-      action: async () => await fetch(`/api/products?page=${page}&limit=6`),
+      action: async () => getProducts({ page }),
       responseValidator: createZodValidator(zProductListResponseSchema),
       onSuccess: async (nextProductsPart) => {
         const newProducts = nextProductsPart.filter(
