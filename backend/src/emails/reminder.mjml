@@ -1,0 +1,15 @@
+<mjml>
+  <mj-head>
+    <mj-title>Good day, Mr.{{ name }}!</mj-title>
+    <mj-include path="./partial/_head.mjml" />
+  </mj-head>
+  <mj-body mj-class="body">
+    <mj-include path="./partial/_header.mjml" />
+    <mj-section mj-class="content">
+      <mj-column>
+        <mj-text mj-class="h1">Just reminder.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./partial/_footer.mjml" />
+  </mj-body>
+</mjml>

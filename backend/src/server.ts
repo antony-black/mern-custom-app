@@ -8,6 +8,7 @@ import { connectDB } from "./config/db";
 
 import router from "./routes/products-router";
 import uploadRouter from "./routes/upload-router";
+import { applyCron } from "./services/cron-service";
 import { logger } from "./services/logger-service";
 import { morganMiddleware } from "./services/morgan-service";
 import { env } from "./utils/env";
@@ -32,6 +33,8 @@ const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
+
+applyCron();
 
 logger.info({
   logType: "server",

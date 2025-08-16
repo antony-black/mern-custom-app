@@ -21,6 +21,7 @@
     "@types/lodash": "^4.17.20",
     "axios": "^1.11.0",
     "cloudinary": "^2.7.0",
+    "cron": "^4.3.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "fast-glob": "^3.3.3",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
+    "@types/cron": "^2.0.1",
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^1.4.13",

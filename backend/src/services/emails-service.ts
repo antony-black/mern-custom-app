@@ -15,3 +15,14 @@ export const sendSuccessEmail = async () => {
     },
   });
 };
+
+export const sendReminderEmail = async () => {
+  return await sendEmail({
+    to: "merncustomapp@gmail.com",
+    subject: "Just reminder.",
+    templateName: "reminder",
+    templateVariables: {
+      name: "Makar",
+    },
+  });
+};
