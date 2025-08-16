@@ -19,7 +19,7 @@ export const sendSuccessEmail = async () => {
 export const sendReminderEmail = async () => {
   return await sendEmail({
     to: "merncustomapp@gmail.com",
-    subject: "Just reminder.",
+    subject: "Hey Makar, quick reminder for you",
     templateName: "reminder",
     templateVariables: {
       name: "Makar",

@@ -1,15 +1,24 @@
 <mjml>
   <mj-head>
-    <mj-title>Good day, Mr.{{ name }}!</mj-title>
-    <mj-include path="./partial/_head.mjml" />
+    <mj-title>Reminder for {{ name }}</mj-title>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.5" color="#333333" />
+    </mj-attributes>
   </mj-head>
-  <mj-body mj-class="body">
-    <mj-include path="./partial/_header.mjml" />
-    <mj-section mj-class="content">
+  <mj-body>
+    <mj-section padding="20px 0">
       <mj-column>
-        <mj-text mj-class="h1">Just reminder.</mj-text>
+        <mj-text> Hey {{ name }}, </mj-text>
+        <mj-text> Just a quick reminder to check your dashboard when you get a chance: </mj-text>
+        <mj-text>
+          👉 <a href="{{ homeUrl }}" style="color: #1a73e8; text-decoration: none">Go to your dashboard</a>
+        </mj-text>
+        <mj-text>
+          Best,<br />
+          Makar
+        </mj-text>
       </mj-column>
     </mj-section>
-    <mj-include path="./partial/_footer.mjml" />
   </mj-body>
 </mjml>
