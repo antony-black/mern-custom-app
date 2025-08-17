@@ -1,22 +1,35 @@
-type THandleProduct<Input> = {
+type THandleRequest<Input> = {
   method: "POST" | "PUT" | "DELETE";
-  productId?: string;
+  url?: string;
   data?: Input;
+  id?: string;
 };
 
-export const handleProduct = async <Input>({
+export const handleRequest = async <Input>({
   method,
+  url = "/api/products",
   data,
-  productId,
-}: THandleProduct<Input>): Promise<Response> => {
-  let url = "/api/products";
-  if (productId && (method === "PUT" || method === "DELETE")) {
-    url += `/${productId}`;
+  id,
+}: THandleRequest<Input>): Promise<Response> => {
+  if (id) {
+    url = `${url}/${id}`;
   }
 
-  return fetch(url, {
+  const isFormData = data instanceof FormData;
+
+  const config: RequestInit = {
     method,
-    headers: { "Content-Type": "application/json" },
-    body: method === "POST" || method === "PUT" ? JSON.stringify(data) : undefined,
-  });
+    body:
+      method === "POST" || method === "PUT"
+        ? isFormData
+          ? (data as FormData)
+          : JSON.stringify(data)
+        : undefined,
+  };
+
+  if (!isFormData) {
+    config.headers = { "Content-Type": "application/json" };
+  }
+
+  return fetch(url, config);
 };

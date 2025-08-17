@@ -1,3 +1,4 @@
+import { handleRequest } from "./handle-product";
 import { cloudinaryLogger } from "./logger/logger-handler";
 // import type { UseToastOptions } from "@chakra-ui/react";
 import type { TApiResponse, TProductBase } from "@shared/types";
@@ -31,9 +32,10 @@ const uploadFile = async ({
   cloudinaryLogger.groupEnd();
 
   try {
-    const response = await fetch("/api/upload", {
+    const response = await handleRequest<FormData>({
       method: "POST",
-      body: formData,
+      url: "/api/upload",
+      data: formData,
     });
     cloudinaryLogger.debug("API Response status:", response.status);
 
