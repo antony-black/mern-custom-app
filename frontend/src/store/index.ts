@@ -5,7 +5,7 @@ import {
 } from "@shared/types/zod";
 import { createZodValidator } from "utils/create-zod-validator";
 import { getProducts } from "utils/get-products";
-import { handleRequest } from "utils/handle-product";
+import { handleRequest } from "utils/handle-request";
 import { storeLogger } from "utils/logger/logger-handler";
 import { runStoreAction } from "utils/run-store-action";
 import { create } from "zustand";

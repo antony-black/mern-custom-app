@@ -22,7 +22,7 @@ export const handleRequest = async <Input>({
     body:
       method === "POST" || method === "PUT"
         ? isFormData
-          ? (data as FormData)
+          ? data
           : JSON.stringify(data)
         : undefined,
   };
@@ -31,5 +31,5 @@ export const handleRequest = async <Input>({
     config.headers = { "Content-Type": "application/json" };
   }
 
-  return fetch(url, config);
+  return await fetch(url, config);
 };

@@ -78,7 +78,7 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
           />
         </HStack>
       </Box>
-
+      {/* TODO: move to a separate component */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <PageWrapperComponent title="edit | Product Store" content="Edit your product details" />
 
