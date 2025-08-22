@@ -4,8 +4,8 @@ import {
   zProductListResponseSchema,
 } from "@shared/types/zod";
 import { createZodValidator } from "utils/create-zod-validator";
-import { getProducts } from "utils/get-products";
-import { handleRequest } from "utils/handle-request";
+import { getProducts } from "utils/get-products/get-products";
+import { handleRequest } from "utils/handle-request/handle-request";
 import { storeLogger } from "utils/logger/logger-handler";
 import { runStoreAction } from "utils/run-store-action";
 import { create } from "zustand";
