@@ -5,7 +5,6 @@ describe("handle-request", () => {
   const updateMockData = { id: 1, name: "Shirt-updated", price: 150 };
 
   beforeEach(() => {
-    // Mock the fetch function
     global.fetch = jest.fn();
   });
 
