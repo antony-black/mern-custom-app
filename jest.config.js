@@ -27,5 +27,5 @@ export default {
   // setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'], // optional, for jest-dom etc.
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   // collectCoverage: true,
-  coverageDirectory: '<rootDir>/coverage/',
+  // coverageDirectory: '<rootDir>/coverage/',
 };

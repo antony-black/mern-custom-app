@@ -4,5 +4,5 @@ import baseConfig from "../jest.config.js";
 export default {
   ...baseConfig,
   // testEnvironment: "jsdom", // frontend needs DOM-like env
-  roots: ["<rootDir>/src"],
+  // roots: ["<rootDir>/src"],
 };

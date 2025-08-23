@@ -15,7 +15,7 @@ interface IHandleUploadFile extends IUploadFile {
   setUploading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const uploadFile = async ({
+export const uploadFile = async ({
   file,
   // toast,
 }: IUploadFile): Promise<TApiResponse<TCloudinaryImageRaw>> => {
@@ -94,6 +94,8 @@ export const handleUploadFile = async ({
       setValue("image", data.secure_url, { shouldValidate: true, shouldDirty: true });
       setValue("publicId", data.public_id, { shouldValidate: true, shouldDirty: true });
       cloudinaryLogger.debug("File uploaded successfully:", data.secure_url);
+    } else {
+      cloudinaryLogger.error("Upload handler error:", uploadedFileData?.message);
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
