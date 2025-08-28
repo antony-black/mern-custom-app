@@ -1,4 +1,4 @@
-import { storeLogger } from "./logger/logger-handler";
+import { storeLogger } from "../logger/logger-handler";
 import type { TValidator } from "@shared/types";
 
 type TRunStoreAction<
@@ -38,7 +38,7 @@ export async function runStoreAction<
     const isValidInput = inputValidator(inputData);
 
     if (!isValidInput.success) {
-      storeLogger.warn("Invalid product input", inputData);
+      storeLogger.warn("Invalid product input.", inputData);
       storeLogger.groupEnd();
 
       return {
