@@ -1,7 +1,7 @@
-import axios, { type AxiosResponse } from "axios";
+import { type AxiosResponse } from "axios";
 import _ from "lodash";
-import { env } from "../utils/env";
-import { getResponseFromBrevo } from "@/helpers/get-response-from-brevo";
+import { getResponseFromBrevo } from "../../helpers/get-response-from-brevo";
+import { env } from "../env";
 
 export const makeRequestToBrevo = async ({
   path,

@@ -1,5 +1,5 @@
 import { env } from "../utils/env";
-import { makeRequestToBrevo } from "../utils/make-request-to-brevo";
+import { makeRequestToBrevo } from "../utils/make-response-to-brevo/make-request-to-brevo";
 
 export const sendEmailThroughBrevo = async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
   return await makeRequestToBrevo({

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, isAxiosError } from "axios";
-import { env } from "@/utils/env";
+import { env } from "../utils/env";
 
 export const getResponseFromBrevo = async ({
   path,
