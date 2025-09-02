@@ -1,7 +1,7 @@
 import { v2 as cloudinary, type UploadApiResponse } from "cloudinary";
-import { TApiResponse } from "../../../shared/src/types/index";
-import { env } from "../utils/env";
-import { logger } from "./logger/logger-service";
+import { TApiResponse } from "../../../../shared/src/types/index";
+import { env } from "../../utils/env";
+import { logger } from "../logger/logger-service";
 
 cloudinary.config({
   cloud_name: env.CLOUDINARY_CLOUD_NAME,

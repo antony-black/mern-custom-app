@@ -1,10 +1,11 @@
 import fs from "fs";
 
 import { RequestHandler } from "express";
-import { uploadToCloudinaryService, removeFromCloudinaryService } from "..//services/cloudinary-service";
+import { uploadToCloudinaryService, removeFromCloudinaryService } from "../services/cloudinary/cloudinary-service";
 
 export const uploadToCloudinary: RequestHandler = async (req, res) => {
   const filePath = req.file?.path;
+  console.log("filePath:", filePath);
   if (!filePath) {
     res.status(400).json({ success: false, message: "No image uploaded" });
     return;

@@ -1,7 +1,7 @@
 import { TProduct, TProductApiResponse, TProductBase, TProductListApiResponse } from "../../../shared/src/types/index";
 import Product from "../models/product-model";
 import { transformDbResponseList, transformDbResponse } from "../utils/transform-db-response";
-import { removeFromCloudinaryService } from "./cloudinary-service";
+import { removeFromCloudinaryService } from "./cloudinary/cloudinary-service";
 import { sendSuccessEmail } from "./emails-service";
 
 export const getAllProductsService = async (page = 1, limit = 6): Promise<TProductListApiResponse> => {
