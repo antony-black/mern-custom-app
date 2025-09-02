@@ -1,6 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import _ from "lodash";
 import { env } from "../utils/env";
+import { getResponseFromBrevo } from "@/helpers/get-response-from-brevo";
 
 export const makeRequestToBrevo = async ({
   path,
@@ -22,16 +23,7 @@ export const makeRequestToBrevo = async ({
     };
   }
 
-  const response = await axios({
-    method: "POST",
-    url: `https://api.brevo.com/v3/${path}`,
-    headers: {
-      accept: "application/json",
-      "api-key": env.BREVO_API_KEY,
-      "content-type": "application/json",
-    },
-    data,
-  });
+  const response = await getResponseFromBrevo({ path, data });
 
   return {
     originalResponse: response,
