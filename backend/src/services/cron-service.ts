@@ -1,6 +1,6 @@
 import { CronJob } from "cron";
 import { sendReminderEmail } from "./emails-service";
-import { logger } from "./logger-service";
+import { logger } from "./logger/logger-service";
 
 export const applyCron = () => {
   logger.info({

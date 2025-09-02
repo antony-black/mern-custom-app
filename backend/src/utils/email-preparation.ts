@@ -5,7 +5,7 @@ import fg from "fast-glob";
 import Handlebars from "handlebars";
 import _ from "lodash";
 import { sendEmailThroughBrevo } from "../services/brevo-service";
-import { logger } from "../services/logger-service";
+import { logger } from "../services/logger/logger-service";
 import { getBaseAppUrl } from "./env";
 
 const BASE_APP_URL = getBaseAppUrl();

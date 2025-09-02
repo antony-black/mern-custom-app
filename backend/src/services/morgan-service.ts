@@ -1,7 +1,7 @@
 import { Request } from "express";
 import morgan from "morgan";
 import pc from "picocolors";
-import { logger } from "./logger-service";
+import { logger } from "./logger/logger-service";
 
 const getStatusColor = (status: string) => {
   return (

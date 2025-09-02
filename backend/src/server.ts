@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import express from "express";
 
 import { connectDB } from "./config/db";
@@ -9,11 +9,11 @@ import { connectDB } from "./config/db";
 import router from "./routes/products-router";
 import uploadRouter from "./routes/upload-router";
 import { applyCron } from "./services/cron-service";
-import { logger } from "./services/logger-service";
+import { logger } from "./services/logger/logger-service";
 import { morganMiddleware } from "./services/morgan-service";
 import { env } from "./utils/env";
 
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 

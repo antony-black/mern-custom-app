@@ -1,11 +1,10 @@
 import { EOL } from "os";
 import _ from "lodash";
 import pc from "picocolors";
-import { serializeError } from "serialize-error";
 import { MESSAGE } from "triple-beam";
 import winston from "winston";
 import * as yaml from "yaml";
-import { env } from "../utils/env";
+import { env } from "../../utils/env";
 
 export const winstonLogger = winston.createLogger({
   level: "debug",
@@ -47,45 +46,3 @@ export const winstonLogger = winston.createLogger({
     }),
   ],
 });
-
-type TLoggerBase = {
-  logType: string;
-  logData?: Record<string, any>;
-};
-
-type TLoggerInfo = TLoggerBase & {
-  message: string;
-};
-
-type TLoggerError = TLoggerBase & {
-  error: any;
-};
-
-export const logger = {
-  info: ({ logType, message, logData }: TLoggerInfo) => {
-    winstonLogger.info({
-      logType,
-      message,
-      logData: logData ?? {},
-    });
-  },
-
-  http: ({ logType, message, logData }: TLoggerInfo) => {
-    winstonLogger.info({
-      logType,
-      message,
-      logData: logData ?? {},
-    });
-  },
-
-  error: ({ logType, error, logData }: TLoggerError) => {
-    const serializedError = serializeError(error);
-
-    winstonLogger.error({
-      logType,
-      message: serializedError.message || "Unknown error",
-      error: serializedError,
-      logData: logData ?? {},
-    });
-  },
-};
