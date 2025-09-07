@@ -50,7 +50,7 @@ describe("make request to brevo", () => {
     mockedAxios.mockResolvedValue(mockApiResponse);
     // mockedAxios.post.mockResolvedValue(new Response(JSON.stringify(mockApiResponse)));
 
-    const response = await makeRequestToBrevo({ ...mockEmailBuilder, path: "wrong path" });
+    const response = await makeRequestToBrevo({ ...mockEmailBuilder, path: "smtp/email" });
 
     expect(mockedAxios).toHaveBeenCalledTimes(1);
 

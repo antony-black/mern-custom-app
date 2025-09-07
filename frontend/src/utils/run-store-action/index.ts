@@ -57,7 +57,7 @@ export async function runStoreAction<
 
     const apiResponse = await action(inputData);
     const responseData: Output = await apiResponse.json();
-    storeLogger.debug("API responded with:", responseData);
+    // storeLogger.debug("API responded with:", responseData);
 
     const isValidApiResponse = responseValidator(responseData);
     if (!isValidApiResponse.success) {
