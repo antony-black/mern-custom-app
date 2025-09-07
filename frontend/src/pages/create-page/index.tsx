@@ -12,7 +12,7 @@ const initialFormState = {
 
 export const CreatePage: React.FC = () => {
   const { createProduct } = useProductStore();
-  console.log("TEST");
+
   return (
     <Container maxW={"container.sm"}>
       <PageWrapperComponent title="add new | Product Store" content="Add a new amazing product!" />
