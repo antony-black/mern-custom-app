@@ -16,6 +16,7 @@
     "watch-preview-emails": "concurrently \"npm:watch-emails\" \"npm:preview-emails\"",
     "build-ts": "tsc --project .",
     "build": "run-s build-ts build-emails copy-emails",
+    "types": "tsc --noEmit --project ./tsconfig.json",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
     "prettify": "prettier --write ."

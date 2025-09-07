@@ -15,6 +15,7 @@
     "test": "npm run test --workspaces --if-present",
     "test:watch": "npm run test:watch --workspaces",
     "test:coverage": "npm run test:coverage --workspaces",
+    "types": "npm run types --workspaces",
     "lint": "npm run lint --workspace frontend && npm run lint --workspace backend",
     "lint-fix": "npm run lint-fix --workspace frontend && npm run lint-fix --workspace backend",
     "prettify": "npm run prettify --workspace frontend && npm run prettify --workspace backend",

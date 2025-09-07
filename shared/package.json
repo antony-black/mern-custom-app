@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "types": "tsc --noEmit --project ./tsconfig.json"
   },
   "dependencies": {
     "zod": "^4.0.5"
