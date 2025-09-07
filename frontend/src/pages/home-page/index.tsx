@@ -16,7 +16,7 @@ export const HomePage: React.FC = () => {
       .then(() => homePageLogger.info("Products loaded"))
       .catch((error) => homePageLogger.error("Failed to fetch products", error));
   }, [fetchProducts]);
-
+  console.log("TEST");
   return (
     <Container maxW="container.xl" py={12}>
       <PageWrapperComponent
