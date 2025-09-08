@@ -4,11 +4,68 @@ on:
     branches:
       - master
 jobs:
-  print:
+  test:
     runs-on: windows-latest
     steps:
-      - name: Print to console
-        run: echo Hello GH Actions!
-      - name: Print a few lines
-        run: echo First line
-          echo Second line
+      - name: Get repository code
+        uses: actions/checkout@v3
+      - name: Cash dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Test application
+        run: npm run test
+  lint:
+    runs-on: windows-latest
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v3
+      - name: Cash dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint application
+        run: npm run lint
+  build:
+    needs: [lint, test]
+    continue-on-error: true
+    strategy:
+      matrix:
+        node-version: [14, 20]
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v3
+      - name: Install Node JS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cash dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Build project
+        run: npm run build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: build
+          name: build-files
+  deploy:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - name: Get built project
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
