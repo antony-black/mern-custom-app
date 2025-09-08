@@ -1,13 +1,14 @@
 name: Demo Workflow
-on: workflow_dispatch
-jobs: 
-  print: 
+on:
+  push:
+    branches:
+      - master
+jobs:
+  print:
     runs-on: windows-latest
     steps:
       - name: Print to console
         run: echo Hello GH Actions!
       - name: Print a few lines
-        run: 
-            echo First line
-            echo Second line
-      
+        run: echo First line
+          echo Second line
