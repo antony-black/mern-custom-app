@@ -100,19 +100,12 @@ jobs:
     needs: build
     runs-on: windows-latest
     steps:
-      - name: Download frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-build
 
-      - name: Verify artifacts
+      - name: Verify backend artifact
         run: |
-          echo "Frontend artifact contents:"
-          ls -R frontend/dist
           echo "Backend artifact contents:"
           ls -R backend/dist
