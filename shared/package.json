@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "jest --passWithNoTests",
+    "test:coverage": "jest --coverage --passWithNoTests",
     "types": "tsc --noEmit --project ./tsconfig.json"
   },
   "dependencies": {
