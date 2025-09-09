@@ -98,7 +98,15 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload backend artifact
+      - name: Upload frontend build
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/dist
+          if-no-files-found: error
+          compression-level: 6
+
+      - name: Upload backend build
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
