@@ -6,12 +6,12 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Get repository code
         uses: actions/checkout@v3
 
-      - name: Install Node JS
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -29,12 +29,12 @@ jobs:
         run: npm run test
 
   lint:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Get repository code
         uses: actions/checkout@v3
 
-      - name: Install Node JS
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -51,22 +51,40 @@ jobs:
       - name: Lint application
         run: npm run lint
 
-  build:
-    needs: [lint, test]
-    continue-on-error: true
-    strategy:
-      matrix:
-        node-version: [20]
-        os: [windows-latest]
-    runs-on: ${{ matrix.os }}
+  types:
+    runs-on: ubuntu-latest
     steps:
       - name: Get repository code
         uses: actions/checkout@v3
 
-      - name: Install Node JS
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20
+
+      - name: Cash dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type checks
+        run: npm run types
+
+  build:
+    needs: [test, lint, types]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
       - name: Cash dependencies
         uses: actions/cache@v3
@@ -80,13 +98,13 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload frontend build
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend/dist
-          if-no-files-found: warn
-          compression-level: 6
+      # - name: Upload frontend build
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: frontend-build
+      #     path: frontend/dist
+      #     if-no-files-found: warn
+      #     compression-level: 6
 
       - name: Upload backend build
         uses: actions/upload-artifact@v4
@@ -98,7 +116,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Download backend artifact
         uses: actions/download-artifact@v4
@@ -109,3 +127,6 @@ jobs:
         run: |
           echo "Backend artifact contents:"
           ls -R backend/dist
+
+      # - name: Trigger Render deploy
+      #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
