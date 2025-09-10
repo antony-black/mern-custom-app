@@ -75,7 +75,7 @@ jobs:
   #       run: npm run types
 
   build:
-    needs: [test, lint, types]
+    # needs: [test, lint, types]
     runs-on: windows-latest
     steps:
       - name: Get repository code
