@@ -5,77 +5,77 @@ on:
       - master
 
 jobs:
-  # test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get repository code
-  #       uses: actions/checkout@v3
+  test:
+    runs-on: windows-latest
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v5
 
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 20
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
 
-  #     - name: Cash dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.npm
-  #         key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Cash dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-  #     - name: Install dependencies
-  #       run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  #     - name: Test application
-  #       run: npm run test
+      - name: Test application
+        run: npm run test
 
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get repository code
-  #       uses: actions/checkout@v3
+  lint:
+    runs-on: windows-latest
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v5
 
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 20
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
 
-  #     - name: Cash dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.npm
-  #         key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Cash dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-  #     - name: Install dependencies
-  #       run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  #     - name: Lint application
-  #       run: npm run lint
+      - name: Lint application
+        run: npm run lint
 
-  # types:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get repository code
-  #       uses: actions/checkout@v3
+  types:
+    runs-on: windows-latest
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v5
 
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 20
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
 
-  #     - name: Cash dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.npm
-  #         key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Cash dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-  #     - name: Install dependencies
-  #       run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  #     - name: Run type checks
-  #       run: npm run types
+      - name: Run type checks
+        run: npm run types
 
   build:
-    # needs: [test, lint, types]
+    needs: [test, lint, types]
     runs-on: windows-latest
     steps:
       - name: Get repository code
@@ -103,7 +103,7 @@ jobs:
         with:
           name: frontend-build
           path: frontend/dist
-          if-no-files-found: warn
+          if-no-files-found: error
           compression-level: 6
 
       - name: Upload backend build
@@ -111,7 +111,7 @@ jobs:
         with:
           name: backend-build
           path: backend/dist
-          if-no-files-found: warn
+          if-no-files-found: error
           compression-level: 6
 
   deploy:
