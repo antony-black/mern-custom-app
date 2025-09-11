@@ -98,19 +98,19 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload frontend build
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend/dist/**
-          if-no-files-found: error
-          compression-level: 6
+      # - name: Upload frontend build
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: frontend-build
+      #     path: frontend/dist
+      #     if-no-files-found: error
+      #     compression-level: 6
 
       - name: Upload backend build
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: backend/dist/**
+          path: backend/dist
           if-no-files-found: error
           compression-level: 6
 
@@ -118,24 +118,22 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      # - name: Download frontend artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: frontend-build
+      #     path: frontend
+
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-build
           path: backend
 
-      - name: Download frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend
-
       - name: Verify artifacts
         run: |
           echo "Backend artifact contents:"
           ls -R backend/dist
-          echo "Frontend artifact contents:"
-          ls -R frontend/dist
 
       # - name: Trigger Render deploy
       #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
