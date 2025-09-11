@@ -102,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: frontend/dist
+          path: frontend/dist/**
           if-no-files-found: error
           compression-level: 6
 
@@ -110,7 +110,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: backend/dist/backend
+          path: backend/dist/**
           if-no-files-found: error
           compression-level: 6
 
@@ -122,11 +122,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-build
+          path: backend
 
-      - name: Verify backend artifact
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend
+
+      - name: Verify artifacts
         run: |
           echo "Backend artifact contents:"
-          ls -R backend/dist/backend
+          ls -R backend/dist
+          echo "Frontend artifact contents:"
+          ls -R frontend/dist
 
       # - name: Trigger Render deploy
       #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
