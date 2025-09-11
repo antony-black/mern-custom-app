@@ -11,7 +11,7 @@
     "test:coverage": "jest --coverage",
     "build-emails": "shx rm -rf ./src/emails/dist && shx mkdir -p ./src/emails/dist && mjml ./src/emails/[!_]*.mjml -o ./src/emails/dist",
     "watch-emails": "mjml -w ./src/emails/[!_]*.mjml -o ./src/emails/dist",
-    "copy-emails": "copyfiles -f ./src/emails/dist/*.html ./dist/emails",
+    "copy-emails": "copyfiles ./src/emails/dist/*.html ./dist/backend",
     "preview-emails": "live-server ./src/emails/dist",
     "watch-preview-emails": "concurrently \"npm:watch-emails\" \"npm:preview-emails\"",
     "build-ts": "tsc --project .",
