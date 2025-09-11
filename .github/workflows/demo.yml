@@ -121,6 +121,11 @@ jobs:
           name: backend-build
           path: backend
 
+      # - name: Verify artifacts
+      #   run: |
+      #     echo "Backend artifact contents:"
+      #     ls -R backend/dist
+
       - name: Show downloaded backend artifact
         run: |
           echo "=== Downloaded backend structure ==="
