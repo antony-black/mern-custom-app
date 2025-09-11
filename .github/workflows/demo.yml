@@ -98,13 +98,10 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # - name: Upload frontend build
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: frontend-build
-      #     path: frontend/dist
-      #     if-no-files-found: error
-      #     compression-level: 6
+      - name: Show backend build structure
+        run: |
+          echo "=== Backend dist structure ==="
+          find backend/dist -type f
 
       - name: Upload backend build
         uses: actions/upload-artifact@v4
@@ -118,22 +115,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # - name: Download frontend artifact
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: frontend-build
-      #     path: frontend
-
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-build
           path: backend
 
-      - name: Verify artifacts
+      - name: Show downloaded backend artifact
         run: |
-          echo "Backend artifact contents:"
-          ls -R backend/dist
+          echo "=== Downloaded backend structure ==="
+          find backend -type f
 
       # - name: Trigger Render deploy
       #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
