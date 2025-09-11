@@ -75,14 +75,14 @@ jobs:
   #       run: npm run types
 
   build:
-    needs: [test, lint, types]
+    # needs: [test, lint, types]
     runs-on: ubuntu-latest
     steps:
       - name: Get repository code
         uses: actions/checkout@v3
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
           node-version: 20
 
