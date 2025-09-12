@@ -95,15 +95,35 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
-        run: npm run build
+      # - name: Build project
+      #   run: npm run build
 
-      - name: Show backend build structure
+      # - name: Show backend build structure
+      #   run: |
+      #     echo "=== Backend dist structure ==="
+      #     find backend/dist -type f
+
+      # - name: Upload backend build
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: backend-build
+      #     path: backend
+      #     if-no-files-found: error
+      #     compression-level: 6
+      - name: Build frontend
+        run: npm run build --workspace frontend
+
+      - name: Build backend
+        run: npm run build --workspace backend
+
+      - name: Copy frontend dist into backend public
         run: |
-          echo "=== Backend dist structure ==="
-          find backend/dist -type f
+          mkdir -p backend/dist/public
+          cp -r frontend/dist/* backend/dist/public/
+          echo "=== Backend now contains frontend build ==="
+          find backend/dist/public -type f | head -20
 
-      - name: Upload backend build
+      - name: Upload backend build (with frontend included)
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
@@ -126,10 +146,14 @@ jobs:
           echo "=== Downloaded backend structure ==="
           find backend -type f
 
+      # - name: Verify artifact
+      #   run: |
+      #     echo "Backend artifact contents:"
+      #     ls -R backend/dist
       - name: Verify artifact
         run: |
-          echo "Backend artifact contents:"
-          ls -R backend/dist
+          echo "=== Artifact contents ==="
+          ls -R backend/dist | head -40
 
       # - name: Trigger Render deploy
       #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
