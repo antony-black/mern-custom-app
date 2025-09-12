@@ -5,77 +5,77 @@ on:
       - master
 
 jobs:
-  # test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get repository code
-  #       uses: actions/checkout@v5
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v5
 
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@v5
-  #       with:
-  #         node-version: 20
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
 
-  #     - name: Cash dependencies
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: ~/.npm
-  #         key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Cash dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-  #     - name: Install dependencies
-  #       run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  #     - name: Test application
-  #       run: npm run test
+      - name: Test application
+        run: npm run test
 
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get repository code
-  #       uses: actions/checkout@v5
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v5
 
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@v5
-  #       with:
-  #         node-version: 20
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
 
-  #     - name: Cash dependencies
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: ~/.npm
-  #         key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Cash dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-  #     - name: Install dependencies
-  #       run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  #     - name: Lint application
-  #       run: npm run lint
+      - name: Lint application
+        run: npm run lint
 
-  # types:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get repository code
-  #       uses: actions/checkout@v5
+  types:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v5
 
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@v5
-  #       with:
-  #         node-version: 20
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
 
-  #     - name: Cash dependencies
-  #       uses: actions/cache@v4
-  #       with:
-  #         path: ~/.npm
-  #         key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Cash dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-  #     - name: Install dependencies
-  #       run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  #     - name: Run type checks
-  #       run: npm run types
+      - name: Run type checks
+        run: npm run types
 
   build:
-    # needs: [test, lint, types]
+    needs: [test, lint, types]
     runs-on: ubuntu-latest
     steps:
       - name: Get repository code
