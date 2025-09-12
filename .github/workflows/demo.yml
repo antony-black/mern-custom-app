@@ -74,134 +74,36 @@ jobs:
       - name: Run type checks
         run: npm run types
 
-  # build:
-  #   needs: [test, lint, types]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get repository code
-  #       uses: actions/checkout@v3
-
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@v5
-  #       with:
-  #         node-version: 20
-
-  #     - name: Cash dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.npm
-  #         key: node-modules-${{ hashFiles('**/package-lock.json') }}
-
-  #     - name: Install dependencies
-  #       run: npm ci
-
-  #     # - name: Build project
-  #     #   run: npm run build
-
-  #     # - name: Show backend build structure
-  #     #   run: |
-  #     #     echo "=== Backend dist structure ==="
-  #     #     find backend/dist -type f
-
-  #     # - name: Upload backend build
-  #     #   uses: actions/upload-artifact@v4
-  #     #   with:
-  #     #     name: backend-build
-  #     #     path: backend
-  #     #     if-no-files-found: error
-  #     #     compression-level: 6
-  #     - name: Build frontend
-  #       run: npm run build --workspace frontend
-
-  #     - name: Build backend
-  #       run: npm run build --workspace backend
-
-  #     - name: Copy frontend dist into backend public
-  #       run: |
-  #         mkdir -p backend/dist/public
-  #         cp -r frontend/dist/* backend/dist/public/
-  #         echo "=== Backend now contains frontend build ==="
-  #         find backend/dist/public -type f | head -20
-
-  #     - name: Upload backend build (with frontend included)
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: backend-build
-  #         path: backend
-  #         if-no-files-found: error
-  #         compression-level: 6
-
-  # deploy:
-  # needs: build
-  # runs-on: ubuntu-latest
-  # steps:
-  #   - name: Download backend artifact
-  #     uses: actions/download-artifact@v4
-  #     with:
-  #       name: backend-build
-  #       path: backend
-
-  #   - name: Show downloaded backend artifact
-  #     run: |
-  #       echo "=== Downloaded backend structure ==="
-  #       find backend -type f
-
-  #   # - name: Verify artifact
-  #   #   run: |
-  #   #     echo "Backend artifact contents:"
-  #   #     ls -R backend/dist
-  #   - name: Verify artifact
-  #     run: |
-  #       echo "=== Artifact contents ==="
-  #       ls -R backend/dist | head -40
-
-  #   # - name: Trigger Render deploy
-  #   #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-  #   - name: Trigger Render deploy
-  #     if: github.ref == 'refs/heads/master'
-  #     env:
-  #       deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-  #     run: curl "$deploy_url"
   build:
+    needs: [test, lint, types]
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Checkout code
-      - name: Checkout repository
+      - name: Get repository code
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js
-      - name: Setup Node.js
+      - name: Install Node.js
         uses: actions/setup-node@v5
         with:
           node-version: 20
 
-      # 3️⃣ Cache npm dependencies
-      - name: Cache dependencies
+      - name: Cash dependencies
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-      # 4️⃣ Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 5️⃣ Build frontend + backend
       - name: Build project
         run: npm run build
 
-      # 6️⃣ Copy frontend dist into backend for serving
-      - name: Copy frontend build into backend
+      - name: Show backend build structure
         run: |
-          mkdir -p backend/dist/public
-          cp -r frontend/dist/* backend/dist/public/
+          echo "=== Backend dist structure ==="
+          find backend/dist -type f
 
-      # 7️⃣ Verify backend dist structure
-      - name: Verify backend dist
-        run: find backend/dist
-
-      # 8️⃣ Upload backend artifact
-      - name: Upload backend artifact
+      - name: Upload backend build
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
@@ -213,18 +115,24 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Download backend artifact
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-build
           path: backend
 
-      # 2️⃣ Verify downloaded artifact
-      - name: Verify artifact
-        run: find backend
+      - name: Show downloaded backend artifact
+        run: |
+          echo "=== Downloaded backend structure ==="
+          find backend -type f
 
-      # 3️⃣ Trigger Render deploy
+      - name: Verify artifact
+        run: |
+          echo "Backend artifact contents:"
+          ls -R backend/dist
+
+      # - name: Trigger Render deploy
+      #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
       - name: Trigger Render deploy
         if: github.ref == 'refs/heads/master'
         env:
