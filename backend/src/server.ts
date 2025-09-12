@@ -43,7 +43,8 @@ logger.info({
 });
 
 if (process.env.NODE_ENV === "production") {
-  const distPath = path.resolve(__dirname, "../frontend/dist");
+  // const distPath = path.resolve(__dirname, "../frontend/dist");
+  const distPath = path.join(__dirname, "public");
 
   app.use(express.static(distPath));
   app.get("*", (req, res) => {
