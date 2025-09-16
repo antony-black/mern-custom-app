@@ -9,7 +9,7 @@
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build-emails": "shx rm -rf ./src/emails/dist && shx mkdir -p ./src/emails/dist && mjml ./src/emails/[!_]*.mjml -o ./src/emails/dist",
+    "build-emails": "rimraf ./src/emails/dist && mkdirp ./src/emails/dist && mjml ./src/emails/[!_]*.mjml -o ./src/emails/dist",
     "watch-emails": "mjml -w ./src/emails/[!_]*.mjml -o ./src/emails/dist",
     "copy-emails": "copyfiles ./src/emails/dist/*.html ./dist/backend",
     "preview-emails": "live-server ./src/emails/dist",
