@@ -1,16 +1,20 @@
-import { storeLogger } from "utils/logger/logger-handler";
-import { runStoreAction } from ".";
+import { runStoreAction } from "utils";
+import { storeLogger } from "utils/logger";
 
-jest.mock("../logger/logger-handler", () => ({
-  storeLogger: {
-    groupCollapsed: jest.fn(),
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    groupEnd: jest.fn(),
-  },
-}));
+jest.mock("utils/logger", () => {
+  const originalModule = jest.requireActual("utils");
+  return {
+    ...originalModule,
+    storeLogger: {
+      groupCollapsed: jest.fn(),
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+      groupEnd: jest.fn(),
+    },
+  };
+});
 
 beforeEach(() => {
   jest.clearAllMocks();

@@ -23,6 +23,7 @@
       "store/*": ["store/*"],
       "types/*": ["types/*"],
       "utils/*": ["utils/*"],
+      "routes/*": ["routes/*"],
       "@shared/*": ["../../shared/src/*"]
     },
 

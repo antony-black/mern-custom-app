@@ -1,4 +1,4 @@
-import { getProducts } from "./get-products";
+import { getProducts } from "utils";
 
 describe("get-products", () => {
   const mockData = {

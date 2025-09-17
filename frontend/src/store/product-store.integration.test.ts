@@ -1,14 +1,14 @@
-import { getProducts } from "utils/get-products/get-products";
-import { handleRequest } from "utils/handle-request/handle-request";
+import { getProducts, handleRequest } from "utils";
 import { useProductStore } from ".";
 
-jest.mock("utils/handle-request/handle-request", () => ({
-  handleRequest: jest.fn(),
-}));
-
-jest.mock("utils/get-products/get-products", () => ({
-  getProducts: jest.fn(),
-}));
+jest.mock("utils", () => {
+  const originalModule = jest.requireActual("utils");
+  return {
+    ...originalModule,
+    handleRequest: jest.fn(),
+    getProducts: jest.fn(),
+  };
+});
 
 describe("product-store", () => {
   const mockProducts = [

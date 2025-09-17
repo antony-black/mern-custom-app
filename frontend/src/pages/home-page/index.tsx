@@ -1,13 +1,12 @@
 import { Container, SimpleGrid, Text, VStack, Spinner, Box } from "@chakra-ui/react";
-import { PageWrapperComponent } from "components/page-wrapper-component";
-import { ProductCard } from "components/product-card";
+import { ProductCard, PageWrapperComponent } from "components";
 import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { Link } from "react-router-dom";
 import { useProductStore } from "store/index";
-import { homePageLogger } from "utils/logger/logger-handler";
+import { homePageLogger } from "utils";
 
-export const HomePage: React.FC = () => {
+const HomePage: React.FC = () => {
   const { fetchProducts, loadMoreProducts, hasMore, products } = useProductStore();
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export const HomePage: React.FC = () => {
       .then(() => homePageLogger.info("Products loaded"))
       .catch((error) => homePageLogger.error("Failed to fetch products", error));
   }, [fetchProducts]);
-  console.log("TEST");
+
   return (
     <Container maxW="container.xl" py={12}>
       <PageWrapperComponent
@@ -77,3 +76,5 @@ export const HomePage: React.FC = () => {
     </Container>
   );
 };
+
+export default HomePage;
