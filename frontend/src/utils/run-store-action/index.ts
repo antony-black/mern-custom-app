@@ -1,4 +1,4 @@
-import { storeLogger } from "../logger/logger-handler";
+import { storeLogger } from "utils";
 import type { TValidator } from "@shared/types";
 
 type TRunStoreAction<

@@ -1,4 +1,4 @@
-import type logger from "./logger-handler";
+import type logger from ".";
 
 export const addGroupMethods = (logInstance: logger.Logger) => {
   logInstance.group = (...args: any[]) => {

@@ -1,16 +1,16 @@
-import { handleRequest } from "utils/handle-request/handle-request";
-import { cloudinaryLogger } from "utils/logger/logger-handler";
-import { uploadFile } from "./upload-file";
+import { cloudinaryLogger } from "utils/logger";
+import { handleRequest } from "../handle-request";
+import { uploadFile } from "../upload-file";
 
-jest.mock("../handle-request/handle-request", () => ({
+jest.mock("utils/handle-request", () => ({
   handleRequest: jest.fn(),
 }));
 
-jest.mock("utils/logger/logger-handler", () => ({
+jest.mock("utils/logger", () => ({
   cloudinaryLogger: {
     groupCollapsed: jest.fn(),
-    info: jest.fn(),
     debug: jest.fn(),
+    info: jest.fn(),
     error: jest.fn(),
     groupEnd: jest.fn(),
   },

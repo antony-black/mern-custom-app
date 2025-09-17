@@ -18,10 +18,9 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { PageWrapperComponent, ProductForm } from "components";
 import { useProductStore } from "store/index";
-import { productActionHandler } from "utils/product-action-handler/product-action-handler";
-import { PageWrapperComponent } from "../page-wrapper-component";
-import { ProductForm } from "../product-form";
+import { productActionHandler } from "utils";
 import type { TProduct, TProductBase } from "@shared/types";
 
 type TProductCardProps = {

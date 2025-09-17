@@ -2,8 +2,9 @@ import logger from "loglevel";
 import { addGroupMethods } from "./add-logger-group";
 
 const isDev = process.env.NODE_ENV !== "production";
-console.log(`Logger initialized in ${isDev ? "development" : "production"} mode.`);
-// const isDev = import.meta.env.MODE !== "production";
+if (process.env.NODE_ENV !== "test") {
+  console.log(`Logger initialized in ${isDev ? "development" : "production"} mode.`);
+}
 
 const originalFactory = logger.methodFactory;
 

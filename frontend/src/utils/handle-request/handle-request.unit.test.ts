@@ -1,4 +1,4 @@
-import { handleRequest } from "./handle-request";
+import { handleRequest } from "utils";
 
 describe("handle-request", () => {
   const newMockData = { id: 1, name: "Shirt", price: 100, image: "shirt.png" };

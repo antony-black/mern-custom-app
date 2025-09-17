@@ -1,6 +1,5 @@
 import { Box, Container, Heading, useColorModeValue, VStack } from "@chakra-ui/react";
-import { PageWrapperComponent } from "components/page-wrapper-component";
-import { ProductForm } from "components/product-form";
+import React, { Suspense } from "react";
 import { useProductStore } from "store/index";
 import type { TProductBase } from "@shared/types";
 
@@ -10,12 +9,26 @@ const initialFormState = {
   image: "",
 } satisfies TProductBase;
 
-export const CreatePage: React.FC = () => {
+const PageWrapperComponent = React.lazy(() =>
+  import("../../components/page-wrapper-component").then((mod) => ({
+    default: mod.PageWrapperComponent,
+  })),
+);
+const ProductForm = React.lazy(() =>
+  import("../../components/product-form").then((mod) => ({ default: mod.ProductForm })),
+);
+
+const CreatePage: React.FC = () => {
   const { createProduct } = useProductStore();
 
   return (
     <Container maxW={"container.sm"}>
-      <PageWrapperComponent title="add new | Product Store" content="Add a new amazing product!" />
+      <Suspense fallback={<div>Loading page...</div>}>
+        <PageWrapperComponent
+          title="add new | Product Store"
+          content="Add a new amazing product!"
+        />
+      </Suspense>
 
       <VStack spacing={8}>
         <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8}>
@@ -29,16 +42,17 @@ export const CreatePage: React.FC = () => {
           rounded={"lg"}
           shadow={"md"}
         >
-          <ProductForm
-            initialFormState={initialFormState}
-            action={{
-              type: "create",
-              actionHandler: createProduct,
-            }}
-            shouldReset={true}
-          />
+          <Suspense fallback={<div>Loading form...</div>}>
+            <ProductForm
+              initialFormState={initialFormState}
+              action={{ type: "create", actionHandler: createProduct }}
+              shouldReset
+            />
+          </Suspense>
         </Box>
       </VStack>
     </Container>
   );
 };
+
+export default CreatePage;

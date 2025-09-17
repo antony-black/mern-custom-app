@@ -1,16 +1,20 @@
-import { cloudinaryLogger } from "utils/logger/logger-handler";
-import { handleUploadFile } from "./upload-file";
-import * as uploadFileModule from "./upload-file";
+import { handleUploadFile } from "utils";
+import { cloudinaryLogger } from "utils/logger";
+import * as uploadFileModule from "utils/upload-file";
 
-jest.mock("utils/logger/logger-handler", () => ({
-  cloudinaryLogger: {
-    groupCollapsed: jest.fn(),
-    info: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    groupEnd: jest.fn(),
-  },
-}));
+jest.mock("utils/logger", () => {
+  const originalModule = jest.requireActual("utils");
+  return {
+    ...originalModule,
+    cloudinaryLogger: {
+      groupCollapsed: jest.fn(),
+      info: jest.fn(),
+      debug: jest.fn(),
+      error: jest.fn(),
+      groupEnd: jest.fn(),
+    },
+  };
+});
 
 describe("handle-upload", () => {
   const mockSetValue = jest.fn();

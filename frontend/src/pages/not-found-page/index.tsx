@@ -1,5 +1,4 @@
-import { ErrorPageComponent } from "components/error-page-component";
-import { PageWrapperComponent } from "components/page-wrapper-component";
+import { ErrorPageComponent, PageWrapperComponent } from "components";
 import image404 from "../../assets/images/404-not-found.png";
 
 type TNotFoundPage = {
@@ -7,7 +6,7 @@ type TNotFoundPage = {
   message?: string;
 };
 
-export const NotFoundPage: React.FC<TNotFoundPage> = ({
+const NotFoundPage: React.FC<TNotFoundPage> = ({
   title = "Not Found",
   message = "This page does not exist",
 }) => (
@@ -19,3 +18,5 @@ export const NotFoundPage: React.FC<TNotFoundPage> = ({
     </ErrorPageComponent>
   </>
 );
+
+export default NotFoundPage;
