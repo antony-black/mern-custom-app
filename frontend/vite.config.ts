@@ -69,12 +69,6 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (
-              id.includes("framer-motion") ||
-              id.includes("node_modules/react") ||
-              id.includes("node_modules/react-dom")
-            )
-              return "motion";
             if (id.includes("pages/not-found-page")) return "NotFoundPage";
             // if (id.includes("node_modules/react")) return "react";
             // if (id.includes("node_modules/react-dom")) return "react-dom";
