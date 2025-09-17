@@ -1,26 +1,12 @@
-import { handleRequest } from "utils/handle-request/handle-request";
-import { cloudinaryLogger } from "utils/logger/logger-handler";
-import { handleUploadFile } from "./upload-file";
+import { handleRequest } from "utils/handle-request";
+import * as cloudinaryLoggerModule from "utils/logger";
+import { handleUploadFile } from "utils/upload-file";
 
-jest.mock("utils/logger/logger-handler", () => ({
-  cloudinaryLogger: {
-    groupCollapsed: jest.fn(),
-    info: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    groupEnd: jest.fn(),
-  },
-}));
-
-jest.mock("../handle-request/handle-request", () => ({
+jest.mock("utils/handle-request", () => ({
   handleRequest: jest.fn(),
 }));
 
 describe("upload-file-integrate-test", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   const mockSetValue = jest.fn();
   const mockSetUploading = jest.fn();
   const mockFile = new File(["dummy content"], "example.png", { type: "image/png" });
@@ -29,6 +15,16 @@ describe("upload-file-integrate-test", () => {
     message: "File uploaded successfully.",
     data: { secure_url: "https://example.com/image.png", public_id: "abc123" },
   };
+
+  const spyGroupCollapsed = jest.spyOn(cloudinaryLoggerModule.cloudinaryLogger, "groupCollapsed");
+  const spyDebug = jest.spyOn(cloudinaryLoggerModule.cloudinaryLogger, "debug");
+  const spyInfo = jest.spyOn(cloudinaryLoggerModule.cloudinaryLogger, "info");
+  const spyError = jest.spyOn(cloudinaryLoggerModule.cloudinaryLogger, "error");
+  const spyGroupEnd = jest.spyOn(cloudinaryLoggerModule.cloudinaryLogger, "groupEnd");
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   test("SUCCESS: should successfully uploads file and updates form state", async () => {
     (handleRequest as jest.Mock).mockResolvedValue(
@@ -45,7 +41,6 @@ describe("upload-file-integrate-test", () => {
 
     expect(handleRequest).toHaveBeenCalledTimes(1);
     const calledArgs = (handleRequest as jest.Mock).mock.calls[0][0];
-    console.log("calledArgs:", calledArgs);
     expect(calledArgs.method).toBe("POST");
     expect(calledArgs.url).toBe("/api/upload");
     expect(calledArgs.data).toBeInstanceOf(FormData);
@@ -63,14 +58,14 @@ describe("upload-file-integrate-test", () => {
     expect(mockSetUploading).toHaveBeenCalledWith(false);
     expect(mockSetUploading).toHaveBeenCalledTimes(2);
 
-    expect(cloudinaryLogger.groupCollapsed).toHaveBeenCalled();
-    expect(cloudinaryLogger.info).toHaveBeenCalled();
-    expect(cloudinaryLogger.debug).toHaveBeenCalledWith(
+    expect(spyGroupCollapsed).toHaveBeenCalled();
+    expect(spyInfo).toHaveBeenCalled();
+    expect(spyDebug).toHaveBeenCalledWith(
       "File uploaded successfully:",
       "https://example.com/image.png",
     );
-    expect(cloudinaryLogger.info).toHaveBeenCalledWith("Upload process finished.");
-    expect(cloudinaryLogger.groupEnd).toHaveBeenCalled();
+    expect(spyInfo).toHaveBeenCalledWith("Upload process finished.");
+    expect(spyGroupEnd).toHaveBeenCalled();
   });
 
   test("FAILURE: should at least log some error when upload fails", async () => {
@@ -96,13 +91,13 @@ describe("upload-file-integrate-test", () => {
 
     expect(mockSetValue).not.toHaveBeenCalled();
 
-    expect(cloudinaryLogger.error).toHaveBeenCalledWith("Upload handler error:", expect.anything());
+    expect(spyError).toHaveBeenCalledWith("Upload handler error:", expect.anything());
 
     expect(mockSetUploading).toHaveBeenCalledWith(false);
     expect(mockSetUploading).toHaveBeenCalledTimes(2);
 
-    expect(cloudinaryLogger.info).toHaveBeenCalledWith("Upload process finished.");
-    expect(cloudinaryLogger.groupEnd).toHaveBeenCalled();
+    expect(spyInfo).toHaveBeenCalledWith("Upload process finished.");
+    expect(spyGroupEnd).toHaveBeenCalled();
   });
 
   test("EXCEPTION: should through an error", async () => {
@@ -120,12 +115,12 @@ describe("upload-file-integrate-test", () => {
 
     expect(mockSetValue).not.toHaveBeenCalled();
 
-    expect(cloudinaryLogger.error).toHaveBeenCalledWith("Upload error:", "Network error");
+    expect(spyError).toHaveBeenCalledWith("Upload error:", "Network error");
 
     expect(mockSetUploading).toHaveBeenCalledWith(false);
     expect(mockSetUploading).toHaveBeenCalledTimes(2);
 
-    expect(cloudinaryLogger.info).toHaveBeenCalledWith("Upload process finished.");
-    expect(cloudinaryLogger.groupEnd).toHaveBeenCalled();
+    expect(spyInfo).toHaveBeenCalledWith("Upload process finished.");
+    expect(spyGroupEnd).toHaveBeenCalled();
   });
 });

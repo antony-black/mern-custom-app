@@ -1,4 +1,4 @@
-import { productActionHandler } from "./product-action-handler";
+import { productActionHandler } from "utils";
 import type { UseToastOptions } from "@chakra-ui/react";
 import type { TProductApiResponse } from "@shared/types";
 

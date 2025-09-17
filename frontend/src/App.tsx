@@ -1,22 +1,18 @@
 import { Box, useColorModeValue } from "@chakra-ui/react";
-import { Navbar } from "components/navbar";
-import { CreatePage } from "pages/create-page";
-import { HomePage } from "pages/home-page";
-import { NotFoundPage } from "pages/not-found-page";
-import { Route, Routes } from "react-router-dom";
-import { appLogger } from "utils/logger/logger-handler";
+import { Navbar } from "components";
+import { useRoutes } from "react-router-dom";
+import { routes } from "routes";
+import { appLogger } from "utils";
 
 function App() {
   appLogger.info("Rendering application");
 
+  const element = useRoutes(routes);
+
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/create" element={<CreatePage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      {element}
     </Box>
   );
 }

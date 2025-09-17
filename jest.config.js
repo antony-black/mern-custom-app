@@ -13,6 +13,7 @@ export default {
     '^store/(.*)$': '<rootDir>/src/store/$1',
     '^types/(.*)$': '<rootDir>/src/types/$1',
     '^utils/(.*)$': '<rootDir>/src/utils/$1',
+    '^utils$': '<rootDir>/src/utils/index.ts',
   },
   transform: {
     '^.+\\.tsx?$': 'ts-jest',

@@ -3,11 +3,7 @@ import {
   zProductResponseSchema,
   zProductListResponseSchema,
 } from "@shared/types/zod";
-import { createZodValidator } from "utils/create-zod-validator";
-import { getProducts } from "utils/get-products/get-products";
-import { handleRequest } from "utils/handle-request/handle-request";
-import { storeLogger } from "utils/logger/logger-handler";
-import { runStoreAction } from "utils/run-store-action";
+import { createZodValidator, getProducts, handleRequest, storeLogger, runStoreAction } from "utils";
 import { create } from "zustand";
 import type {
   TProduct,
