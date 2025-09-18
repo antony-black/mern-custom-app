@@ -54,13 +54,21 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+            // if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+            //   return "vendor-react";
+            // }
+            // if (id.includes("node_modules/framer-motion")) {
+            //   return "vendor-motion";
+            // }
+            if (
+              id.includes("node_modules/react") ||
+              id.includes("node_modules/react-dom") ||
+              id.includes("framer-motion") ||
+              id.includes("@chakra-ui") ||
+              id.includes("@emotion")
+            ) {
               return "vendor-react";
             }
-            if (id.includes("node_modules/framer-motion")) {
-              return "vendor-motion";
-            }
-            if (id.includes("@chakra-ui") || id.includes("@emotion")) return "chakra";
             if (id.includes("node_modules/zustand")) return "state";
             if (id.includes("axios") || id.includes("loglevel")) return "utils";
           },
