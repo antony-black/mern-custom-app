@@ -72,7 +72,7 @@ export default defineConfig(({ mode }) => {
             if (id.includes("pages/not-found-page")) return "NotFoundPage";
             // if (id.includes("node_modules/react")) return "react";
             // if (id.includes("node_modules/react-dom")) return "react-dom";
-            if (id.includes("node_modules/react-router-dom")) return "router";
+            // if (id.includes("node_modules/react-router-dom")) return "router";
             if (id.includes("node_modules/zustand")) return "state";
             // if (id.includes("node_modules/@chakra-ui")) return "chakra";
             // if (id.includes("node_modules/@emotion")) return "chakra";
