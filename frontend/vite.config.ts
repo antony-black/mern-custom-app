@@ -60,6 +60,7 @@ export default defineConfig(({ mode }) => {
             if (id.includes("node_modules/framer-motion")) {
               return "vendor-motion";
             }
+            if (id.includes("@chakra-ui") || id.includes("@emotion")) return "chakra";
             if (id.includes("node_modules/zustand")) return "state";
             if (id.includes("axios") || id.includes("loglevel")) return "utils";
           },
