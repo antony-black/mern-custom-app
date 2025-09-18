@@ -1,6 +1,6 @@
 import * as path from "node:path";
 
-import legacy from "@vitejs/plugin-legacy";
+// import legacy from "@vitejs/plugin-legacy";
 import react from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
 import { visualizer } from "rollup-plugin-visualizer";
@@ -20,9 +20,9 @@ export default defineConfig(({ mode }) => {
         brotliSize: true,
       }),
       svgr(),
-      legacy({
-        targets: ["> 0.01%"], // Support for older browsers
-      }),
+      // legacy({
+      //   targets: ["> 0.01%"], // Support for older browsers
+      // }),
     ],
     server: {
       port: +env.PORT,
@@ -59,9 +59,9 @@ export default defineConfig(({ mode }) => {
             if (id.includes("framer-motion")) return "motion";
             if (id.includes("axios") || id.includes("loglevel")) return "utils";
 
-            if (id.includes("pages/home-pages")) return "HomePage";
-            if (id.includes("components/product-form")) return "ProductForm";
-            if (id.includes("pages/create-page")) return "CreatePage";
+            // if (id.includes("pages/home-pages")) return "HomePage";
+            // if (id.includes("components/product-form")) return "ProductForm";
+            // if (id.includes("pages/create-page")) return "CreatePage";
           },
         },
       },
