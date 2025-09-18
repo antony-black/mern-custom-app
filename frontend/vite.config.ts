@@ -63,12 +63,14 @@ export default defineConfig(({ mode }) => {
             if (
               id.includes("node_modules/react") ||
               id.includes("node_modules/react-dom") ||
-              id.includes("framer-motion") ||
+              // id.includes("framer-motion") ||
               id.includes("@chakra-ui") ||
               id.includes("@emotion")
             ) {
               return "vendor-react";
             }
+
+            if (id.includes("node_modules/framer-motion")) return "vendor-motion";
             if (id.includes("node_modules/zustand")) return "state";
             if (id.includes("axios") || id.includes("loglevel")) return "utils";
           },
