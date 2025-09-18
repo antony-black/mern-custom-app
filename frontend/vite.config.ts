@@ -120,26 +120,16 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      chunkSizeWarningLimit: 800,
       rollupOptions: {
         output: {
           manualChunks(id) {
-            // First, prioritize core libraries like React
+            // A dedicated chunk for React and its core dependencies
             if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
               return "vendor-react";
             }
-            // Then, chunk other large, independent libraries
-            if (id.includes("node_modules/zustand")) {
-              return "state";
-            }
-            if (id.includes("node_modules/@chakra-ui") || id.includes("node_modules/@emotion")) {
-              return "chakra";
-            }
+            // The rest of your chunking logic can go here, e.g.:
             if (id.includes("node_modules/framer-motion")) {
-              return "motion";
-            }
-            if (id.includes("node_modules/axios") || id.includes("node_modules/loglevel")) {
-              return "utils";
+              return "vendor-motion";
             }
           },
         },
