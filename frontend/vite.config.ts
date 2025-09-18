@@ -3,16 +3,22 @@ import * as path from "node:path";
 import legacy from "@vitejs/plugin-legacy";
 import react from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
+import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, loadEnv } from "vite";
 import svgr from "vite-plugin-svgr";
 
-// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
     plugins: [
       react(),
+      visualizer({
+        filename: "dist/stats.html",
+        open: true, // will auto-open in browser after build
+        gzipSize: true,
+        brotliSize: true,
+      }),
       svgr(),
       legacy({
         targets: ["> 0.01%"], // Support for older browsers
@@ -47,33 +53,15 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 800,
       rollupOptions: {
         output: {
-          // manualChunks(id) {
-          //   // if (id.includes("pages/not-found-page")) return "NotFoundPage";
-          //   // if (id.includes("node_modules/react")) return "react";
-          //   // if (id.includes("node_modules/react-dom")) return "react-dom";
-          //   // if (id.includes("node_modules/react-router-dom")) return "router";
-          //   // if (id.includes("node_modules/zustand")) return "state";
-          //   // if (id.includes("node_modules/@chakra-ui")) return "chakra";
-          //   // if (id.includes("node_modules/@emotion")) return "chakra";
-          //   // if (/node_modules\/(@chakra-ui|@emotion)\//.test(id)) return "chakra";
-          //   // if (id.includes("@chakra-ui")) return "chakra";
-          //   // if (id.includes("framer-motion")) return "motion";
-          //   // if (id.includes("node_modules/axios") || id.includes("node_modules/loglevel"))
-          //   //   return "utils";
-
-          //   if (id.includes("pages/home-pages")) return "HomePage";
-          //   if (id.includes("components/product-form")) return "ProductForm";
-          //   if (id.includes("pages/create-page")) return "CreatePage";
-          // },
           manualChunks(id) {
             if (id.includes("node_modules/zustand")) return "state";
             if (id.includes("@chakra-ui") || id.includes("@emotion")) return "chakra";
             if (id.includes("framer-motion")) return "motion";
             if (id.includes("axios") || id.includes("loglevel")) return "utils";
 
-            // if (id.includes("pages/home-pages")) return "HomePage";
-            // if (id.includes("components/product-form")) return "ProductForm";
-            // if (id.includes("pages/create-page")) return "CreatePage";
+            if (id.includes("pages/home-pages")) return "HomePage";
+            if (id.includes("components/product-form")) return "ProductForm";
+            if (id.includes("pages/create-page")) return "CreatePage";
           },
         },
       },
