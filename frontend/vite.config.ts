@@ -69,18 +69,18 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes("pages/not-found-page")) return "NotFoundPage";
+            // if (id.includes("pages/not-found-page")) return "NotFoundPage";
             // if (id.includes("node_modules/react")) return "react";
             // if (id.includes("node_modules/react-dom")) return "react-dom";
             // if (id.includes("node_modules/react-router-dom")) return "router";
-            if (id.includes("node_modules/zustand")) return "state";
+            // if (id.includes("node_modules/zustand")) return "state";
             // if (id.includes("node_modules/@chakra-ui")) return "chakra";
             // if (id.includes("node_modules/@emotion")) return "chakra";
             // if (/node_modules\/(@chakra-ui|@emotion)\//.test(id)) return "chakra";
-            if (id.includes("@chakra-ui")) return "chakra";
+            // if (id.includes("@chakra-ui")) return "chakra";
             // if (id.includes("framer-motion")) return "motion";
-            if (id.includes("node_modules/axios") || id.includes("node_modules/loglevel"))
-              return "utils";
+            // if (id.includes("node_modules/axios") || id.includes("node_modules/loglevel"))
+            //   return "utils";
             if (id.includes("pages/home-pages")) return "HomePage";
             if (id.includes("components/product-form")) return "ProductForm";
             if (id.includes("pages/create-page")) return "CreatePage";

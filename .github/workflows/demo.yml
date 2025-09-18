@@ -1,143 +1,143 @@
-name: Demo Workflow
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+# name: Demo Workflow
+# on:
+#   push:
+#     branches:
+#       - master
+#   pull_request:
+#     branches:
+#       - master
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get repository code
-        uses: actions/checkout@v5
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Get repository code
+#         uses: actions/checkout@v5
 
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 20
+#       - name: Install Node.js
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: 20
 
-      - name: Cash dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+#       - name: Cash dependencies
+#         uses: actions/cache@v4
+#         with:
+#           path: ~/.npm
+#           key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install dependencies
-        run: npm ci
+#       - name: Install dependencies
+#         run: npm ci
 
-      - name: Test application
-        run: npm run test
+#       - name: Test application
+#         run: npm run test
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get repository code
-        uses: actions/checkout@v5
+#   lint:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Get repository code
+#         uses: actions/checkout@v5
 
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 20
+#       - name: Install Node.js
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: 20
 
-      - name: Cash dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+#       - name: Cash dependencies
+#         uses: actions/cache@v4
+#         with:
+#           path: ~/.npm
+#           key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install dependencies
-        run: npm ci
+#       - name: Install dependencies
+#         run: npm ci
 
-      - name: Lint application
-        run: npm run lint
+#       - name: Lint application
+#         run: npm run lint
 
-  types:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get repository code
-        uses: actions/checkout@v5
+#   types:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Get repository code
+#         uses: actions/checkout@v5
 
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 20
+#       - name: Install Node.js
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: 20
 
-      - name: Cash dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+#       - name: Cash dependencies
+#         uses: actions/cache@v4
+#         with:
+#           path: ~/.npm
+#           key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install dependencies
-        run: npm ci
+#       - name: Install dependencies
+#         run: npm ci
 
-      - name: Run type checks
-        run: npm run types
+#       - name: Run type checks
+#         run: npm run types
 
-  build:
-    needs: [test, lint, types]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get repository code
-        uses: actions/checkout@v3
+#   build:
+#     needs: [test, lint, types]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Get repository code
+#         uses: actions/checkout@v3
 
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 20
+#       - name: Install Node.js
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: 20
 
-      - name: Cash dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+#       - name: Cash dependencies
+#         uses: actions/cache@v3
+#         with:
+#           path: ~/.npm
+#           key: node-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install dependencies
-        run: npm ci
+#       - name: Install dependencies
+#         run: npm ci
 
-      - name: Build project
-        run: npm run build
+#       - name: Build project
+#         run: npm run build
 
-      - name: Show backend build structure
-        run: |
-          echo "=== Backend dist structure ==="
-          find backend/dist -type f
+#       - name: Show backend build structure
+#         run: |
+#           echo "=== Backend dist structure ==="
+#           find backend/dist -type f
 
-      - name: Upload backend build
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-build
-          path: backend
-          if-no-files-found: error
-          compression-level: 6
+#       - name: Upload backend build
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: backend-build
+#           path: backend
+#           if-no-files-found: error
+#           compression-level: 6
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download backend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-build
-          path: backend
+#   deploy:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Download backend artifact
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: backend-build
+#           path: backend
 
-      - name: Show downloaded backend artifact
-        run: |
-          echo "=== Downloaded backend structure ==="
-          find backend -type f
+#       - name: Show downloaded backend artifact
+#         run: |
+#           echo "=== Downloaded backend structure ==="
+#           find backend -type f
 
-      - name: Verify artifact
-        run: |
-          echo "Backend artifact contents:"
-          ls -R backend/dist
+#       - name: Verify artifact
+#         run: |
+#           echo "Backend artifact contents:"
+#           ls -R backend/dist
 
-      # - name: Trigger Render deploy
-      #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-      - name: Trigger Render deploy
-        if: github.ref == 'refs/heads/master'
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        run: curl "$deploy_url"
+#       # - name: Trigger Render deploy
+#       #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+#       - name: Trigger Render deploy
+#         if: github.ref == 'refs/heads/master'
+#         env:
+#           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+#         run: curl "$deploy_url"
