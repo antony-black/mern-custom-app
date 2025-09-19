@@ -61,10 +61,13 @@ export default defineConfig(({ mode }) => {
               id.includes("@chakra-ui") ||
               id.includes("@emotion")
             ) {
-              return "vendor-react";
+              return "react-motion-chakra";
             }
-            if (id.includes("node_modules/zustand")) return "state";
+            if (id.includes("node_modules/zustand")) return "zustand";
             if (id.includes("axios") || id.includes("loglevel")) return "utils";
+            if (id.includes("pages/home-pages")) return "HomePage";
+            if (id.includes("components/product-form")) return "ProductForm";
+            if (id.includes("pages/create-page")) return "CreatePage";
           },
         },
       },
