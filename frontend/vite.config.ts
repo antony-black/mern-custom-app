@@ -49,6 +49,27 @@ export default defineConfig(({ mode }) => {
         "@shared": path.resolve(__dirname, "../shared/src"),
       },
     },
+    // build: {
+    //   chunkSizeWarningLimit: 1000,
+    //   rollupOptions: {
+    //     output: {
+    //       manualChunks(id) {
+    //         if (
+    //           id.includes("node_modules/react") ||
+    //           id.includes("node_modules/react-dom") ||
+    //           id.includes("framer-motion") ||
+    //           id.includes("@chakra-ui") ||
+    //           id.includes("@emotion")
+    //         ) {
+    //           return "react-motion-chakra";
+    //         }
+    //         if (id.includes("node_modules/zustand")) return "zustand";
+    //         if (id.includes("axios") || id.includes("loglevel")) return "utils";
+    //       },
+    //     },
+    //   },
+    // },
+
     build: {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
@@ -65,9 +86,18 @@ export default defineConfig(({ mode }) => {
             }
             if (id.includes("node_modules/zustand")) return "zustand";
             if (id.includes("axios") || id.includes("loglevel")) return "utils";
-            if (id.includes("pages/home-pages")) return "HomePage";
-            if (id.includes("components/product-form")) return "ProductForm";
-            if (id.includes("pages/create-page")) return "CreatePage";
+          },
+          chunkFileNames: (chunkInfo) => {
+            if (chunkInfo.facadeModuleId) {
+              const relPath = path.relative(process.cwd(), chunkInfo.facadeModuleId);
+              const parsed = path.parse(relPath);
+              const folders = parsed.dir.split(path.sep);
+              const folderName = folders[folders.length - 1];
+              const baseName = parsed.name === "index" ? folderName : parsed.name;
+
+              return `assets/${baseName}-[hash].js`;
+            }
+            return "assets/[name]-[hash].js";
           },
         },
       },
