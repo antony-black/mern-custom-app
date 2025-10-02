@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import {
   addProductService,
   getAllProductsService,
-  getFullProductService,
   removeProductsService,
   updateProductService,
 } from "../services/products-service";
@@ -18,18 +17,6 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
   }
 
   res.status(200).json({ success, message, data });
-};
-
-export const getFullProduct = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
-
-  const { success, message, data } = await getFullProductService(id);
-  if (!success) {
-    res.status(500).json({ success, message });
-    return;
-  }
-
-  res.status(200).json({ success, data, message });
 };
 
 export const addProduct = async (req: Request, res: Response): Promise<void> => {

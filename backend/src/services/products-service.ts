@@ -32,34 +32,6 @@ export const getAllProductsService = async (page = 1, limit = 6): Promise<TProdu
     };
   }
 };
-
-export const getFullProductService = async (id: string): Promise<TProductApiResponse> => {
-  try {
-    const product = await Product.findById({ _id: id });
-    if (!product) {
-      return {
-        success: false,
-        message: "Product not found.",
-      };
-    }
-
-    return {
-      success: true,
-      message: "Get the product full info.",
-      data: transformDbResponse(product),
-    };
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error("get-full-product-error:", error.message);
-    }
-
-    return {
-      success: false,
-      message: `Failed to get the full product, id: ${id}.`,
-    };
-  }
-};
-
 export const addProductService = async (product: TProductBase): Promise<TProductApiResponse> => {
   const newProduct = new Product(product);
   if (!newProduct) {
