@@ -19,6 +19,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { PageWrapperComponent, ProductForm } from "components";
+import { Link } from "react-router-dom";
 import { useProductStore } from "store/index";
 import { productActionHandler } from "utils";
 import type { TProduct, TProductBase } from "@shared/types";
@@ -56,27 +57,29 @@ export const ProductCard: React.FC<TProductCardProps> = ({ product }) => {
       bg={bg}
       cursor={"pointer"}
     >
-      <Image src={product.image} alt={product.name} h={48} w="full" objectFit="contain" />
+      <Link to={`/info/${product._id}`}>
+        <Image src={product.image} alt={product.name} h={48} w="full" objectFit="contain" />
 
-      <Box p={4}>
-        <Heading as="h3" size="md" mb={2}>
-          {product.name}
-        </Heading>
+        <Box p={4}>
+          <Heading as="h3" size="md" mb={2}>
+            {product.name}
+          </Heading>
 
-        <Text fontWeight="bold" fontSize="xl" color={textColor} mb={4}>
-          ${product.price}
-        </Text>
+          <Text fontWeight="bold" fontSize="xl" color={textColor} mb={4}>
+            ${product.price}
+          </Text>
 
-        <HStack spacing={2}>
-          <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" aria-label={""} />
-          <IconButton
-            icon={<DeleteIcon />}
-            onClick={handleDeleteProduct}
-            colorScheme="red"
-            aria-label={""}
-          />
-        </HStack>
-      </Box>
+          <HStack spacing={2}>
+            <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" aria-label={""} />
+            <IconButton
+              icon={<DeleteIcon />}
+              onClick={handleDeleteProduct}
+              colorScheme="red"
+              aria-label={""}
+            />
+          </HStack>
+        </Box>
+      </Link>
       {/* TODO: move to a separate component */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <PageWrapperComponent title="edit | Product Store" content="Edit your product details" />

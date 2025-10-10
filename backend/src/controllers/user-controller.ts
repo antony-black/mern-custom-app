@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { loginService, logoutService, registrationService } from "../services/user-service";
 
+
 export const registration = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, email, password } = req.body;
@@ -25,6 +26,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     const { email, password } = req.body;
     const userData = await loginService(email, password);
 
+
     res.cookie("refreshToken", userData.refreshToken, {
       maxAge: 30 * 24 * 68 * 1000,
       httpOnly: true,
@@ -38,6 +40,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     }
   }
 };
+
 
 export const logout = async (req: Request, res: Response, next: NextFunction) => {
   const { refreshToken } = req.cookies;

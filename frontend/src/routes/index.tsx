@@ -1,12 +1,18 @@
+import FullProductInfoPage from "pages/full-product-info";
 import React, { Suspense } from "react";
-import { CreatePageSkeleton, HomePageSkeleton, NotFoundPageSkeleton } from "./skeletons";
+import {
+  CreatePageSkeleton,
+  FullProductInfoPageSkeleton,
+  HomePageSkeleton,
+  NotFoundPageSkeleton,
+} from "./skeletons";
 import type { RouteObject } from "react-router-dom";
 
-const HomePage = React.lazy(() => import("../pages/home-page"));
+const HomePage = React.lazy(() => import("../pages/home"));
 
-const CreatePage = React.lazy(() => import("../pages/create-page"));
+const CreatePage = React.lazy(() => import("../pages/create"));
 
-const NotFoundPage = React.lazy(() => import("../pages/not-found-page"));
+const NotFoundPage = React.lazy(() => import("../pages/not-found"));
 
 export const routes: RouteObject[] = [
   {
@@ -14,6 +20,14 @@ export const routes: RouteObject[] = [
     element: (
       <Suspense fallback={<div>{<HomePageSkeleton />}</div>}>
         <HomePage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/info/:id",
+    element: (
+      <Suspense fallback={<div>{<FullProductInfoPageSkeleton />}</div>}>
+        <FullProductInfoPage />
       </Suspense>
     ),
   },

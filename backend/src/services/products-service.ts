@@ -32,7 +32,6 @@ export const getAllProductsService = async (page = 1, limit = 6): Promise<TProdu
     };
   }
 };
-
 export const addProductService = async (product: TProductBase): Promise<TProductApiResponse> => {
   const newProduct = new Product(product);
   if (!newProduct) {
