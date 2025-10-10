@@ -1,6 +1,8 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
 
+export const zIdSchema = z.string().min(1, 'Product ID is required');
+
 export const zProductBaseSchema = z.object({
   name: z.string().min(3, 'Please, let it be at least 3 characters.'),
   price: z.number().min(0).positive('Should be a positive number.'),

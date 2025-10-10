@@ -49,27 +49,6 @@ export default defineConfig(({ mode }) => {
         "@shared": path.resolve(__dirname, "../shared/src"),
       },
     },
-    // build: {
-    //   chunkSizeWarningLimit: 1000,
-    //   rollupOptions: {
-    //     output: {
-    //       manualChunks(id) {
-    //         if (
-    //           id.includes("node_modules/react") ||
-    //           id.includes("node_modules/react-dom") ||
-    //           id.includes("framer-motion") ||
-    //           id.includes("@chakra-ui") ||
-    //           id.includes("@emotion")
-    //         ) {
-    //           return "react-motion-chakra";
-    //         }
-    //         if (id.includes("node_modules/zustand")) return "zustand";
-    //         if (id.includes("axios") || id.includes("loglevel")) return "utils";
-    //       },
-    //     },
-    //   },
-    // },
-
     build: {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {

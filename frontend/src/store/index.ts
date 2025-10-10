@@ -2,6 +2,7 @@ import {
   zProductBaseSchema,
   zProductResponseSchema,
   zProductListResponseSchema,
+  zIdSchema,
 } from "@shared/types/zod";
 import { createZodValidator, getProducts, handleRequest, storeLogger, runStoreAction } from "utils";
 import { create } from "zustand";
@@ -94,6 +95,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     >({
       label: "delete-product",
       inputData: productId,
+      inputValidator: createZodValidator(zIdSchema),
       action: (id) => handleRequest({ method: "DELETE", id }),
       responseValidator: createZodValidator(zProductResponseSchema),
       onDelete: async () => {

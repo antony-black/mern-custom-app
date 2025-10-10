@@ -18,6 +18,8 @@ const zEnvSchema = z.object({
   BREVO_API_KEY: zNonEmptyTrimmedSchema,
   FROM_EMAIL_NAME: zNonEmptyTrimmedSchema,
   FROM_EMAIL_ADDRESS: zNonEmptyTrimmedSchema,
+  JWT_ACCESS_SECRET: zNonEmptyTrimmedSchema,
+  JWT_REFRESH_SECRET: zNonEmptyTrimmedSchema,
 });
 
 export const env = zEnvSchema.parse(process.env);

@@ -1,5 +1,5 @@
 type THandleRequest<Input> = {
-  method: "POST" | "PUT" | "DELETE";
+  method: "GET" | "POST" | "PUT" | "DELETE";
   url?: string;
   data?: Input;
   id?: string;
