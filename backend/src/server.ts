@@ -6,8 +6,9 @@ import express from "express";
 
 import { connectDB } from "./config/db";
 
-import router from "./routes/products-router";
+import productRouter from "./routes/products-router";
 import uploadRouter from "./routes/upload-router";
+import userRouter from "./routes/user-router";
 import { applyCron } from "./services/cron-service";
 import { logger } from "./services/logger/logger-service";
 import { morganMiddleware } from "./services/morgan-service";
@@ -26,7 +27,8 @@ connectDB();
 const __dirname = path.resolve();
 
 app.use(express.json()); // allows us to accept JSON data in the req.body
-app.use("/api/products/", router);
+app.use("/api/user/", userRouter);
+app.use("/api/products/", productRouter);
 app.use("/api/upload", uploadRouter);
 
 const uploadDir = path.join(__dirname, "uploads");
