@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/user-model";
-import { generateTokens, save } from "./token-service";
+import { generateTokens, remove, save } from "./token-service";
 
 export const registrationService = async (name: string, email: string, password: string) => {
   const isUserExisted = await User.findOne({ email });
@@ -28,4 +28,10 @@ export const loginService = async (email: string, password: string) => {
   await save(user.id, tokens.refreshToken);
 
   return { ...tokens, user };
+};
+
+export const logoutService = async (refreshToken: string) => {
+  const token = remove(refreshToken);
+
+  return token;
 };
